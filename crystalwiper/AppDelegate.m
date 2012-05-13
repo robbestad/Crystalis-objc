@@ -10,6 +10,8 @@
 
 #import "AppDelegate.h"
 #import "HelloWorldLayer.h"
+#import "GameScene.h"
+#import "MainMenu.h"
 
 @implementation AppController
 
@@ -35,14 +37,18 @@
 	director_.wantsFullScreenLayout = YES;
 
 	// Display FSP and SPF
-	[director_ setDisplayStats:YES];
+	[director_ setDisplayStats:NO];
 
 	// set FPS at 60
 	[director_ setAnimationInterval:1.0/60];
 
 	// attach the openglView to the director
 	[director_ setView:glView];
-
+    
+    //UNCOMMENT TO ENABLE ADS
+    //adView=[[AdViewController alloc] init];
+    
+    
 	// for rotation and other messages
 	[director_ setDelegate:self];
 
@@ -54,17 +60,34 @@
 	if( ! [director_ enableRetinaDisplay:YES] )
 		CCLOG(@"Retina Display Not supported");
 
-	// Create a Navigation Controller with the Director
+	
+    
+    //SWITCH TO ENABLE ADS
+    // make the OpenGLView a child of the view controller
+	//[navController_ setView:adView.view];
+    [navController_ setView:navController_.view];
+    
+    // Create a Navigation Controller with the Director
 	navController_ = [[UINavigationController alloc] initWithRootViewController:director_];
 	navController_.navigationBarHidden = YES;
 
+    
 	// set the Navigation Controller as the root view controller
-//	[window_ setRootViewController:rootViewController_];
-	[window_ addSubview:navController_.view];
-
+    
+	//SWITCH TO ENABLE ADS
+    [window_ addSubview:navController_.view];
+    //[window_ addSubview: adView.view];
+    
 	// make main window visible
 	[window_ makeKeyAndVisible];
 
+    
+    // Seed random number generator.
+	struct timeval tv;
+	gettimeofday( &tv, 0 );
+	srandom( tv.tv_usec + tv.tv_sec );
+    
+    
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
 	// You can change anytime.
@@ -84,7 +107,8 @@
 	[CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
 
 	// and add the scene to the stack. The director will run it when it automatically when the view is displayed.
-	[director_ pushScene: [HelloWorldLayer scene]]; 
+//	[director_ pushScene: [HelloWorldLayer scene]]; 
+    [director_ pushScene: [MainMenu node]]; 
 
 	return YES;
 }
@@ -92,7 +116,9 @@
 // Supported orientations: Landscape. Customize it for your own needs
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+	return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+    //return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+    
 }
 
 
@@ -140,11 +166,23 @@
 	[[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
 }
 
+
+-(float) getAdHeight{
+    return [adView getAdHeight];
+}
+
+-(void)hideBanner
+{
+    [adView hideBanner];
+}
+
+-(void)showBanner{
+    [adView showBanner];
+}
+
+
 - (void) dealloc
 {
-	[window_ release];
-	[navController_ release];
 
-	[super dealloc];
 }
 @end

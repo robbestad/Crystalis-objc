@@ -15,6 +15,9 @@
 // HelloWorldLayer
 @interface HelloWorldLayer : CCLayer <GKAchievementViewControllerDelegate, GKLeaderboardViewControllerDelegate>
 {
+    BOOL audioInit;
+    UITextField *textfield;
+    UILabel *label;
 }
 
 // returns a CCScene that contains the HelloWorldLayer as the only child

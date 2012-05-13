@@ -184,6 +184,9 @@ static CCTexture2DPixelFormat defaultAlphaPixelFormat_ = kCCTexture2DPixelFormat
 	return self;
 }
 
+
+
+
 - (void) releaseData:(void*)data
 {
 	//Free data
