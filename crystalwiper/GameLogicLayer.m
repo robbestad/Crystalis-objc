@@ -8,6 +8,7 @@
 #import "MainMenu.h"
 
 
+
 // list private methods here
 @interface GameLogicLayer (private)
 
@@ -69,6 +70,7 @@
 
 /// GAME CENTER ////
 - (void) retrieveHighScore {
+    /*
     GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init]; 
     if (leaderboardRequest != nil) {
         leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal; 
@@ -84,6 +86,7 @@
             } 
         }];
     }
+    */
 }
 
 
