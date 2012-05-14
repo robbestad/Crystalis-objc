@@ -49,7 +49,8 @@
 {
     UIButton *button;
 	CCUIViewWrapper *wrapper;
-    
+    BOOL userAuthenticated;   
+
 }
 +(id) scene;
 @end

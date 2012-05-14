@@ -7,6 +7,7 @@
 #import "SimpleAudioEngine.h"
 #import "MainMenu.h"
 #import "GameScene.h"
+//#import "GameKit/GameKit.h"
 
 
 
@@ -20,12 +21,11 @@ enum {
 #pragma mark - MainMenu
 
 @implementation MainMenu
+
 -(id) init
 {
 	if( (self=[super init])) {
-       
-        // [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:playAudo] forKey:@"kPlayAudio"];
-        //NSInteger highScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kHighScore"] intValue];    
+        NSString *fontname=@"American Typewriter";
         BOOL playAudio=YES;
         if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
             playAudio = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] intValue];
@@ -54,7 +54,7 @@ enum {
         [self preloadSounds];
         
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"seigmenn.jpg"];
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
         background4.position = ccp(160,240);
         [self addChild:background4 z:0];
         
@@ -63,22 +63,22 @@ enum {
         audioInit=NO;    
         
         //GAME NAME
-        NSString *gname=NSLocalizedString(@"GameName", @"");
+        //NSString *gname=NSLocalizedString(@"GameName", @"");
         
 #ifdef __CC_PLATFORM_IOS
         self.isTouchEnabled = YES;
 #endif
 		
-        
+        /* 
+
         // Font Item
 		CCMenuItemFont *item1 = [CCMenuItemFont itemWithString: gname block:^(id sender) {
 			// IMPORTANT: It is safe to use "self" because CCMenuItem#cleanup will break any possible circular reference.
 			self->disabledItem.isEnabled = ~self->disabledItem.isEnabled;
 		}];
-        
-		[item1 setFontSize:48];
+      		[item1 setFontSize:48];
         [item1 setColor:ccc3(0,0,255)];
-		[item1 setFontName:@"LCD"];
+		[item1 setFontName:fontname];
         const int FLASH_PERIOD=2;
         id action = [CCTintTo actionWithDuration:FLASH_PERIOD/2 red:255 green:255 blue:255];
         id actionReverse = [CCTintTo actionWithDuration:FLASH_PERIOD/2 red:0 green:0 blue:0];
@@ -92,43 +92,7 @@ enum {
         }
         
         [item1 runAction: action];
-        
-        // Font Item
-        /*
-         CCSprite *spriteNormal = [CCSprite spriteWithFile:@"menuitemsprite.png" rect:CGRectMake(0,23*2,115,23)];
-         CCSprite *spriteSelected = [CCSprite spriteWithFile:@"menuitemsprite.png" rect:CGRectMake(0,23*1,115,23)];
-         CCSprite *spriteDisabled = [CCSprite spriteWithFile:@"menuitemsprite.png" rect:CGRectMake(0,23*0,115,23)];
-         CCMenuItemSprite *item1 = [CCMenuItemSprite itemWithNormalSprite:spriteNormal selectedSprite:spriteSelected disabledSprite:spriteDisabled block:^(id sender) {
-         [[CCDirector  sharedDirector] replaceScene:[GameScene node]];
-         
-         
-         }];
-         
-         // Image Item
-         CCMenuItem *item2 = [CCMenuItemImage itemWithNormalImage:@"SendScoreButton.png" selectedImage:@"SendScoreButtonPressed.png" block:^(id sender) {
-         CCScene *scene = [CCScene node];
-         [scene addChild:[Layer3 node]];
-         [[CCDirector sharedDirector] replaceScene:scene];
-         }];
-         
-         // Label Item (LabelAtlas)
-         CCLabelAtlas *labelAtlas = [CCLabelAtlas labelWithString:@"0123456789" charMapFile:@"fps_images.png" itemWidth:12 itemHeight:32 startCharMap:'.'];
-         CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:labelAtlas block:^(id sender) {
-         // hijack all touch events for 5 seconds
-         CCDirector *director = [CCDirector sharedDirector];
-         #ifdef __CC_PLATFORM_IOS
-         [[director touchDispatcher] setPriority:kCCMenuHandlerPriority-1 forDelegate:self];
-         [self schedule:@selector(allowTouches) interval:5.0f repeat:0 delay:0];
-         #elif defined(__CC_PLATFORM_MAC)
-         [[director eventDispatcher] addMouseDelegate:self priority:kCCMenuHandlerPriority-1];
-         [self schedule:@selector(allowTouches) interval:5.0f];
-         #endif
-         NSLog(@"TOUCHES DISABLED FOR 5 SECONDS");
-         }];
-         
-         item3.disabledColor = ccc3(32,32,64);
-         item3.color = ccc3(200,200,255);
-         */
+       */
         
         NSString *playnow=NSLocalizedString(@"Play", @"");
         
@@ -136,12 +100,14 @@ enum {
 		CCMenuItemFont *item2 = [CCMenuItemFont itemWithString: playnow block:^(id sender) {
 			// IMPORTANT: It is safe to use "self" because CCMenuItem#cleanup will break any possible circular reference.
 			//self->disabledItem.isEnabled = ~self->disabledItem.isEnabled;
-            [[CCDirector  sharedDirector] replaceScene:[GameScene node]];
+           // id appDelegate = [[UIApplication sharedApplication] delegate];           
+            //[[CCDirector  sharedDirector] replaceScene:[GameScene node]];
+            
             
 		}];
         
 		[item2 setFontSize:32];
-		[item2 setFontName:@"LCD"];
+		[item2 setFontName:fontname];
         item2.color=ccc3(0,0,0);
         
         
@@ -159,7 +125,7 @@ enum {
 		}];
         
 		[item3 setFontSize:32];
-		[item3 setFontName:@"LCD"];
+		[item3 setFontName:fontname];
         item3.color=ccc3(0,0,0);
         
         
@@ -180,7 +146,7 @@ enum {
         
         
 		[item4 setFontSize:32];
-		[item4 setFontName:@"LCD"];
+		[item4 setFontName:fontname];
         item4.color=ccc3(0,0,0);
         
         
@@ -199,13 +165,13 @@ enum {
 		}];
         
 		[item6 setFontSize:32];
-		[item6 setFontName:@"LCD"];
+		[item6 setFontName:fontname];
         item6.color=ccc3(0,0,0);
         
         
         
         // OM SPILLET
-        NSString *aboutgame=NSLocalizedString(@"About", @"");
+        NSString *aboutgame=NSLocalizedString(@"Aboutgame", @"");
         
 		CCMenuItemFont *item5 = [CCMenuItemFont itemWithString: aboutgame block:^(id sender) {
 			// IMPORTANT: It is safe to use "self" because CCMenuItem#cleanup will break any possible circular reference.
@@ -213,68 +179,13 @@ enum {
             CCScene *scene = [CCScene node];
             [scene addChild:[LayerPriorityTest node]];
             [[CCDirector sharedDirector] pushScene:scene];			
-         
-            
-		}];
+        }];
         
 		[item5 setFontSize:32];
-		[item5 setFontName:@"LCD"];
+		[item5 setFontName:fontname];
         item5.color=ccc3(0,0,0);
-        
-        /*
-        id color_action = [CCTintBy actionWithDuration:0.5f red:255 green:255 blue:255];
-        id color_back = [color_action reverse];
-        id seq = [CCSequence actions:color_action, color_back, nil];
-        [item5 runAction:[CCRepeatForever actionWithAction:seq]];
-        */
-/*
- const int FLASH_PERIOD=2;
-        id action = [CCTintTo actionWithDuration:FLASH_PERIOD/2 red:251 green:236 blue:94];
-        id actionReverse = [CCTintTo actionWithDuration:FLASH_PERIOD/2 red:0 green:0 blue:0];
-        
-        id sequence = [CCSequence actionOne:action two:actionReverse];
-        action = sequence;
-        int times=2;
-        for(int i = 1; i < times; i++)
-        {
-            action = [CCSequence actionOne:sequence two:action];
-        }
-        
-        [item5 runAction: action];
-*/
-        
-        
-		// Label Item (CCLabelBMFont)
-        /*
-         CCLabelBMFont *label = [CCLabelBMFont labelWithString:playnow fntFile:@"bitmapFontTest3.fnt"];
-         CCMenuItemLabel *item5 = [CCMenuItemLabel itemWithLabel:label block:^(id sender) {
-         [[CCDirector  sharedDirector] replaceScene:[GameScene node]];
-         }];
-         
-         // Testing issue #500
-         item5.scale = 0.8f;
-         
-         // Events
-         [CCMenuItemFont setFontName: @"Marker Felt"];
-         CCMenuItemFont *item6 = [CCMenuItemFont itemWithString:@"Priority Test" block:^(id sender) {
-         CCScene *scene = [CCScene node];
-         [scene addChild:[LayerPriorityTest node]];
-         [[CCDirector sharedDirector] pushScene:scene];			
-         }];
-         
-         // Font Item
-         [CCMenuItemFont setFontSize:30];
-         [CCMenuItemFont setFontName: @"LCD"];
-         CCMenuItemFont *item7 = [CCMenuItemFont itemWithString: @"Quit" block:^(id sender){
-         CC_DIRECTOR_END();
-         }];
-         
-         id color_action = [CCTintBy actionWithDuration:0.5f red:0 green:-255 blue:-255];
-         id color_back = [color_action reverse];
-         id seq = [CCSequence actions:color_action, color_back, nil];
-         [item7 runAction:[CCRepeatForever actionWithAction:seq]];
-         */
-		CCMenu *menu = [CCMenu menuWithItems: item1, item2, item3, item4, item6, item5, nil];
+       
+		CCMenu *menu = [CCMenu menuWithItems: item2, item3, item4, item6, item5, nil];
 		[menu alignItemsVertically];
         
         
@@ -297,8 +208,7 @@ enum {
         
 		
 		[self addChild: menu];
-		//[menu setPosition:ccp(s.width/2, s.height/2)];
-        [menu setPosition:ccp(s.width/2, (s.height/2)+50)];
+	    [menu setPosition:ccp(s.width/2, (s.height/2)-0)];
         
 	}
     
@@ -416,9 +326,9 @@ enum {
 -(id) init
 {
     if( (self=[super init]) ) {
-        
+        NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"seigmenn.jpg"];
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
         background4.position = ccp(160,240);
         [self addChild:background4 z:0];
         
@@ -457,55 +367,60 @@ enum {
         
         
         
-        [CCMenuItemFont setFontName: @"American Typewriter"];
+        [CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:18];
 		CCMenuItemFont *title1 = [CCMenuItemFont itemWithString: txtSound];
 		[title1 setIsEnabled:NO];
-		[CCMenuItemFont setFontName: @"LCD"];
+        title1.color=ccc3(0,0,0);
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
 		CCMenuItemToggle *item1 = [CCMenuItemToggle itemWithTarget:self selector:@selector(menuCallback2:) items:
                                    [CCMenuItemFont itemWithString: txtOn],
                                    [CCMenuItemFont itemWithString: txtOff],
                                    nil];
         item1.tag=1;
+        item1.color=ccc3(0,0,0);
         if(playSoundFX){ item1.selectedIndex = 0; } else {item1.selectedIndex = 1;}
         
         
-		[CCMenuItemFont setFontName: @"American Typewriter"];
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:18];
 		CCMenuItemFont *title2 = [CCMenuItemFont itemWithString: txtMusic];
 		[title2 setIsEnabled:NO];
-		[CCMenuItemFont setFontName: @"LCD"];
+        title2.color=ccc3(0,0,0);
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
 		CCMenuItemToggle *item2 = [CCMenuItemToggle itemWithTarget:self selector:@selector(menuCallback2:) items:
                                    [CCMenuItemFont itemWithString: txtOn],
                                    [CCMenuItemFont itemWithString: txtOff],
                                    nil];
         item2.tag=2;
+        item2.color=ccc3(0,0,0);
         if(playAudio){ item2.selectedIndex = 0; } else {item2.selectedIndex = 1;}
         
-		[CCMenuItemFont setFontName: @"American Typewriter"];
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:18];
 		CCMenuItemFont *title3 = [CCMenuItemFont itemWithString: txtQuality];
 		[title3 setIsEnabled:NO];
-        [CCMenuItemFont setFontName: @"LCD"];
+        [CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
 		CCMenuItemToggle *item3 = [CCMenuItemToggle itemWithTarget:self selector:@selector(menuCallback2:) items:
                                    [CCMenuItemFont itemWithString: txtHigh],
                                    [CCMenuItemFont itemWithString: txtLow],
                                    nil];
         item3.tag=3;
-        
-		[CCMenuItemFont setFontName: @"American Typewriter"];
+        item3.color=ccc3(0,0,0);
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:18];
 		CCMenuItemFont *title4 = [CCMenuItemFont itemWithString: txtOrientation];
 		[title4 setIsEnabled:NO];
         
-		[CCMenuItemFont setFontName: @"LCD"];
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
 		CCMenuItemToggle *item4 = [CCMenuItemToggle itemWithTarget:self selector:@selector(menuCallback2:) items:
                                    [CCMenuItemFont itemWithString: txtOff], nil];
         item4.tag=999;
+        item4.color=ccc3(0,0,0);
 		NSArray *more_items = [NSArray arrayWithObjects:
                                [CCMenuItemFont itemWithString: @"33%"],
                                [CCMenuItemFont itemWithString: @"66%"],
@@ -517,28 +432,46 @@ enum {
 		// you can change the one of the items by doing this
 		item4.selectedIndex = 2;
         
-		[CCMenuItemFont setFontName: @"Marker Felt"];
+		[CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
         
 	    CCMenu *menu = [CCMenu menuWithItems:
-                        title1, title2,
-                        item1, item2,
-                        
+                        title1, 
+                        item1, 
+                        title2,
+                        item2,
                         nil]; // 7 items.
 		[menu alignItemsInColumns:
-		 [NSNumber numberWithUnsignedInt:2],
-		 [NSNumber numberWithUnsignedInt:2],
-         
+		 [NSNumber numberWithUnsignedInt:1],
+		 [NSNumber numberWithUnsignedInt:1],
+         [NSNumber numberWithUnsignedInt:1],
+         [NSNumber numberWithUnsignedInt:1],
          nil
-         ]; // 2 + 2 + 1 + 1 + 1 = total count of 7.
+         ];
         
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		int i=0;
+		for( CCNode *child in [menu children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+                child.position = ccp( dstPoint.x + offset, dstPoint.y);
+            CCLOG(@"final %2.0f",(dstPoint.x - offset));
+			[child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
         
 		[self addChild: menu];
-		CGSize s = [[CCDirector sharedDirector] winSize];
-		[menu setPosition:ccp(s.width/2, s.height/2)];
+		
+        [menu setPosition:ccp(s.width/2, s.height/2)];
         
         
-        [CCMenuItemFont setFontName: @"LCD"];
+        [CCMenuItemFont setFontName: fontname];
 		[CCMenuItemFont setFontSize:34];
         
 		CCLabelTTF *lblText = [CCLabelTTF labelWithString:txtBack fontName:@"American Typewriter" fontSize:30];
@@ -548,6 +481,19 @@ enum {
 		mBack.color=ccc3(0,0,0);
         CCMenu *menu1 = [CCMenu node];
         [menu1 setPosition:ccp(s.width/2, 100)];
+     	for( CCNode *child in [menu1 children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+			child.position = ccp( dstPoint.x + offset, dstPoint.y);
+			[child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
         
         [menu1 addChild:mBack];
         
@@ -648,9 +594,9 @@ enum {
 -(id) init
 {
     if( (self=[super init]) ) {
-        
+        NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"seigmenn.jpg"];
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
         background4.position = ccp(160,240);
         [self addChild:background4 z:0];
         
@@ -676,10 +622,11 @@ enum {
 		CCMenu *menu1 = [CCMenu node];
        // menu1.position=ccp(150,100);
         
+        
 		CGSize s = [[CCDirector sharedDirector] winSize];
 		[menu1 setPosition:ccp(s.width/2, s.height/2)];
         
-        NSString *fontname=@"American Typewriter";
+        
 		int fontSize=24;
         
         NSString *txtReturn=NSLocalizedString(@"Returntomain", @"");
@@ -694,9 +641,11 @@ enum {
     
         
         //DEbug
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        /*
+         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:0 forKey:@"kLevelsUnlocked"];
         [defaults synchronize];
+        */
         //STOP
         
         
@@ -834,11 +783,27 @@ enum {
         [menu1 addChild:item7];
         [menu1 addChild:item8];
         [menu1 addChild:item9];
-		[menu1 addChild:item10];
+		//[menu1 addChild:item10];
 		[menu1 addChild:item1];
         
         
         [menu1 alignItemsVerticallyWithPadding:5 ];
+      	int i=0;
+		for( CCNode *child in [menu1 children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+			child.position = ccp( dstPoint.x + offset, dstPoint.y);
+			[child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
+        
+        menu1.position=ccp(150,200);
         [self addChild:menu1 z:100];
         
         
@@ -1097,62 +1062,32 @@ enum {
 	NSLog(@"buttonTapped");
 }
 
+
+
 // create and initialize a UIView item with the wrapper
 -(void)addUIViewItem
 {
 /*
- // create item programatically
-	button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	[button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchDown];
-	[button setTitle:@"Touch Me Touch Me Touch Me Touch Me Touch Me Touch Me Touch Me " forState:UIControlStateNormal];
-	button.frame = CGRectMake(0.0, 0.0, 120.0, 40.0);
-    
-	// put a wrappar around it
-	wrapper = [CCUIViewWrapper wrapperForUIView:button];
-	[self addChild:wrapper];
-*/
-    
-    /*
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10,60, 300,360)];
-    textView.backgroundColor = [UIColor clearColor];
-    textView.text = @"I wanted to share a class I've written I'm calling CCUIWrapper, which acts as a way of manipulating UIViews via Cocos2D methods. It's not the most momumental class ever written and most of what it does is simple but a few of the pieces took a bit of tinkering and head scratching to put together. I'm sharing this because I think many people might find it very useful, and I'm inclined to believe that it should even be included as part of Cocos2D. UIViews can do many things that Cocos cannot, and the differences between the two systems make them very confusing to merge together. Hopefully this class simplifies the process for people. ";
-    [textView setEditable:NO]; 
-    
-    //[[[CCDirector sharedDirector]view]addSubview:textView];
-    wrapper = [CCUIViewWrapper wrapperForUIView:textView];
-    wrapper.position = ccp(0,400);
-    //[wrapper runAction:[CCRotateTo actionWithDuration:4.5 angle:180]];
-    
-    
-    [self addChild:wrapper z:0];
-    
+ if([self isGameCenterAvailable])
+    {
+        [self initGameCenter];
+        [self gameCenterAuthenticate];
+        [self retrieveTopTenScores];
+    }
     */
-    
-   /* 
-    NSString *textc=@" wanted to share a class I've written I'm calling CCUIWrapper, which acts as a way of manipulating UIViews via Cocos2D methods. It's not the most momumental class ever written and most of what it does is simple but a few of the pieces took a bit of tinkering and head scratching to put together. I'm sharing this because I think many people might find it very useful, and I'm inclined to believe that it should even be included as part of Cocos2D. UIViews can do many things that Cocos cannot, and the differences between the two systems make them very confusing to merge together. Hopefully this class simplifies the process for people.";
-    UILabel* length_label = [[UILabel alloc] init];
-    length_label.text = @"Length: ";
-    length_label.font = [UIFont systemFontOfSize:62.0f];
-    
-    UITextField *length_field	= [[UITextField alloc] init];
-    length_field.text = [NSString stringWithFormat: @"%f",textc.length];
-    length_field.font = [UIFont systemFontOfSize:62.0f];
-    [length_field setBorderStyle:UITextBorderStyleRoundedRect];
-    length_field.keyboardType = UIKeyboardTypeNumberPad;
- */
-    
-    NSString *text=@" wanted to share a class I've written I'm calling CCUIWrapper, which acts as a way of manipulating UIViews via Cocos2D methods. It's not the most momumental class ever written and most of what it does is simple but a few of the pieces took a bit of tinkering and head scratching to put together. I'm sharing this because I think many people might find it very useful, and I'm inclined to believe that it should even be included as part of Cocos2D. UIViews can do many things that Cocos cannot, and the differences between the two systems make them very confusing to merge together. Hopefully this class simplifies the process for people.";
+    NSString *fontname=@"American Typewriter";
+    NSString *text=@" Wiper.";
     
     // self.contentSize.width is limiting the width of the label to this CCNode,
     // in my case it's a new layer of a specific width and height and i don't
     // want the text to go outside these demensions.
-    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"LCD" size:18.0f]
+    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:18.0f]
                        constrainedToSize:CGSizeMake(self.contentSize.width, CGFLOAT_MAX)
                            lineBreakMode:UILineBreakModeWordWrap];
     
     
     CCLabelTTF *textLabel;
-    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"LCD" fontSize:18.0f];
+    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:fontname fontSize:18.0f];
     [self addChild: textLabel];
 }
 
@@ -1162,9 +1097,9 @@ enum {
 		
         [self addUIViewItem];
         
-        
+        NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"seigmenn.jpg"];
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
         background4.position = ccp(160,240);
         [self addChild:background4 z:0];
        
@@ -1175,48 +1110,54 @@ enum {
         
 		
 		// Menu 1
-		[CCMenuItemFont setFontName:@"LCD"];
+		[CCMenuItemFont setFontName:fontname];
 		[CCMenuItemFont setFontSize:18];
 		CCMenuItemFont *item1 = [CCMenuItemFont itemWithString:@"Return to Main Menu" block:^(id sender) {
 			[[CCDirector sharedDirector] popScene];
 		}];
         
-		CCMenuItemFont *item2 = [CCMenuItemFont itemWithString:@"Disable menu for 5 seconds" block:^(id sender) {
-			[menu1 setEnabled:NO];
-			CCDelayTime *wait = [CCDelayTime actionWithDuration:5];
-			CCCallBlockO *enable = [CCCallBlockO actionWithBlock:^(id object) {
-				[object setEnabled:YES];
-			}object:menu1];
-			CCSequence *seq = [CCSequence actions:wait, enable, nil];
-			[menu1 runAction:seq];
-		}];
         
-        
-        NSString *text=@"I wanted to share a class I've written I'm calling CCUIWrapper, which acts as a way of manipulating UIViews via Cocos2D methods. It's not the most momumental class ever written and most of what it does is simple but a few of the pieces took a bit of tinkering and head scratching to put together. I'm sharing this because I think many people might find it very useful, and I'm inclined to believe that it should even be included as part of Cocos2D. UIViews can do many things that Cocos cannot, and the differences between the two systems make them very confusing to merge together. Hopefully this class simplifies the process for people.";
+        NSString *text=@"Wiper er et spill der du skal forsøke å renske spillområdet for krystaller ved å peke på kombinasjoner med flere enn tre krystaller. Dess flere krystaller du klarer å kombinere, dess høyere blir din poengsum. Spillet er laget og publisert av Svenardo og er dedisert Ida Alana og Henry Alexander.";
         
         // self.contentSize.width is limiting the width of the label to this CCNode,
         // in my case it's a new layer of a specific width and height and i don't
         // want the text to go outside these demensions.
-        CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"LCD" size:16.0f]
-                           constrainedToSize:CGSizeMake(self.contentSize.width-20, CGFLOAT_MAX)
+        CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
+                           constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
                                lineBreakMode:UILineBreakModeWordWrap];
         
         
         CCLabelTTF *textLabel;
         textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
-                                      fontName:@"LCD" fontSize:16.0f];
+                                      fontName:fontname fontSize:16.0f];
         CCLOG(@"textsize w%2.0f h%2.0f",textSize.width,textSize.height);
-        textLabel.position=ccp((textSize.width/2)+10,textSize.height);
+        textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
         //textLabel.position=ccpFromSize(textSize);
         textLabel.color=ccc3(0,0,0);
         [self addChild: textLabel];
         
 		
         item1.color=ccc3(0,0,0);
-        item2.color=ccc3(0,0,0);
+      
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		int i=0;
+		for( CCNode *child in [menu1 children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+            child.position = ccp( dstPoint.x + offset, dstPoint.y);
+            CCLOG(@"final %2.0f",(dstPoint.x - offset));
+			[child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
+
         
 		[menu1 addChild:item1];
-        [menu1 addChild:item2];
         
         [menu1 alignItemsVerticallyWithPadding:2  ];
         [self addChild:menu1 z:100];

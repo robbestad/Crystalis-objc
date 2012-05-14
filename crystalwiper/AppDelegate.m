@@ -12,6 +12,7 @@
 #import "HelloWorldLayer.h"
 #import "GameScene.h"
 #import "MainMenu.h"
+#import "GameCenter.h"
 
 @implementation AppController
 
@@ -110,6 +111,10 @@
 //	[director_ pushScene: [HelloWorldLayer scene]]; 
     [director_ pushScene: [MainMenu node]]; 
 
+    
+    //GAMECENTER
+    [[GameCenter sharedInstance] authenticateLocalUser];
+
 	return YES;
 }
 
@@ -120,6 +125,7 @@
     //return UIInterfaceOrientationIsLandscape(interfaceOrientation);
     
 }
+
 
 
 // getting a call, pause the game

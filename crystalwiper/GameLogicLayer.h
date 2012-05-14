@@ -25,7 +25,7 @@
     int prevY;
 	int frameCount;
 	int moveCycleRatio;
-    int score;
+    int score, shadowscore;
     BOOL gameIsOver;
     float locationX;
     float locationY;
@@ -36,7 +36,7 @@
     int maxbricks;
     int remainingshakes;
 	CCLabelTTF *scoreLabel, *scoreValue, *scoreValueShadow;
-    CCLabelTTF *logotext, *bobletext, *difficultyText;
+    CCLabelTTF *logotext, *bobletext, *difficultyText, *txtMultiplier;
     CCLabelTTF *shakeLabel;
     
     CCLabelTTF *tbutton2, *shaketext;

@@ -22,9 +22,7 @@
 	NSString *filename = nil, *color = nil;
 	Brick *temp = nil;
     int brickType;
-   // CCLOG(@"*** DIFFICULTYLEVEL %i",difficultyLevel);
 	brickType = random() % (3+difficultyLevel);
-   // CCLOG(@"*** brickType %i",brickType);
 	
     switch (difficultyLevel) {
         case 0:
@@ -47,10 +45,8 @@
         default:
             break;
     }
-    if(brickType>5) brickType=5;
+    if(brickType>5) brickType=random()%3;
     
-    //if((random()%2)==1) brickType=6;
-    //else brickType=7;
     
     
     switch (brickType) {
@@ -67,7 +63,7 @@
 		temp = [self spriteWithFile:filename];
 		
 		[temp initializeDefaultValues];
-		[temp  setBrickType: brickType];
+		[temp setBrickType: brickType];
 	}
 	return temp;
 }
@@ -75,14 +71,13 @@
 - (void) initializeDefaultValues {
 	[self setAnchorPoint: ccp(0,0)];
 	[self setPosition: ccp(0,0)];
-//	[self setOpacity: 255]; //skal være 255
 	[self setDisappearing: NO];
 	[self setBoardX: 0];
 	[self setBoardY: 0];
 }
 
 - (void) redrawPositionOnBoard {
-	[self setPosition: COMPUTE_X_Y(boardX, boardY)];
+    [self setPosition: COMPUTE_X_Y(boardX, boardY)];
 }
 
 

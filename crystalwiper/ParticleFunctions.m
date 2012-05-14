@@ -20,9 +20,9 @@
 	emitter.texture = [[CCTextureCache sharedTextureCache] addImage:@"dot.png"];
     emitter.position = ccp(x+16,y);
 	emitter.duration = 0.1;
-    emitter.totalParticles=2;
+    emitter.totalParticles=1;
  	emitter.autoRemoveOnFinish = YES; // this removes/deallocs the emitter after its animation
-	[parentNode addChild:emitter z:50];
+	[parentNode addChild:emitter z:500];
 }
 
 @end

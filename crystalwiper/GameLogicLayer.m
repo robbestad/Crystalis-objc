@@ -6,7 +6,9 @@
 #import "SimpleAudioEngine.h"
 #import "AdViewController.h"
 #import "MainMenu.h"
-
+#import "GameKit/GameKit.h"
+#import "GameCenter.h"
+#import "FloatScore.h"
 
 
 // list private methods here
@@ -24,6 +26,7 @@
 - (void) resetScores;
 - (void) checkWinStatus;
 - (void) showMenu;
+- (void) fortsettSpill;
 - (void) restartGame;
 - (void) nextChallenge;
 - (float) scale;
@@ -40,10 +43,9 @@
     self = [super init];
     if (self != nil) {
 		// this tells Cocos2d to call our touch event handlers
-		self.isTouchEnabled = YES;
+		
         
-        self.isAccelerometerEnabled = NO;
-        
+        //self.isAccelerometerEnabled = NO;
         //[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1/60];
         //shake_once = false;
         if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
@@ -62,7 +64,7 @@
         }
         
         
-       [self startGame];		
+        [self startGame];		
         
     }
     return self;
@@ -70,7 +72,6 @@
 
 /// GAME CENTER ////
 - (void) retrieveHighScore {
-    /*
     GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init]; 
     if (leaderboardRequest != nil) {
         leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal; 
@@ -82,63 +83,81 @@
             }
             if (scores != nil){
                 // process the score information.
-                CCLOG(@"My Score: %d", ((GKScore*)[scores objectAtIndex:0]).value);
+                CCLOG(@"************** HIGHScore: %d", ((GKScore*)[scores objectAtIndex:0]).value);
             } 
         }];
     }
-    */
 }
-
+- (void) reportScore: (int64_t) reportScore forCategory: (NSString*) category
+{
+    GKScore *scoreReporter = [[GKScore alloc] initWithCategory:category];
+    scoreReporter.value = (int64_t)reportScore;
+    CCLOG(@"reporting scofre %i",(int64_t)reportScore);
+    
+    
+    
+    [scoreReporter reportScoreWithCompletionHandler:^(NSError *error) {
+        if (error != nil)
+        {
+            // handle the reporting error
+            CCLOG(@"SCORE submission FAILED");
+        }
+        else {
+            CCLOG(@"SCORE REPORTED!");
+        }
+    }];
+}
 
 - (void) dealloc {
     [self clearBoard];
 	
 }
+
 - (void) initMenu{
     
     NSString *gname=NSLocalizedString(@"GameName", @"");
     NSString *fontname=@"American Typewriter";
     logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
-    logotext.position = ccp(49,461);
-    logotext.color=ccc3(255,255,255); 
-    [self addChild:logotext z:30];
-    logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
-    logotext.position = ccp(50,460);
+    logotext.position = ccp(55,460);
     logotext.color=ccc3(0,0,0); 
     [self addChild:logotext z:30];
+    logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
+    logotext.position = ccp(54,461);
+    logotext.color=ccc3(255,255,255); 
+    [self addChild:logotext z:31];
     
     NSString *txtDifficultyLevel;
     txtDifficultyLevel=[[NSString alloc] initWithFormat:@"%i",difficultyLevel];
     
     /*difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:24];
-    difficultyText.position = ccp(149,461);
-    difficultyText.color=ccc3(255,255,255); 
-    [self addChild:difficultyText z:30];
-    */
+     difficultyText.position = ccp(149,461);
+     difficultyText.color=ccc3(255,255,255); 
+     [self addChild:difficultyText z:30];
+     */
     difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:24];
-    difficultyText.position = ccp(150,461);
+    difficultyText.position = ccp(150,460);
     difficultyText.color=ccc3(0,0,0); 
     [self addChild:difficultyText z:30];
     
     
     NSString *scorel=NSLocalizedString(@"Score", @"");
     scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
-    scoreLabel.position =  ccp( 204, 459 );
-    scoreLabel.color=ccc3(255,255,255); 
-    [self addChild:scoreLabel z:30];
-    scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
-    scoreLabel.position =  ccp( 205, 460 );
+    scoreLabel.position =  ccp( 204, 461 );
     scoreLabel.color=ccc3(0,0,0); 
     [self addChild:scoreLabel z:30];
+    scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
+    scoreLabel.position =  ccp( 205, 461 );
+    scoreLabel.color=ccc3(255,255,255); 
+    [self addChild:scoreLabel z:31];
     
     scoreValueShadow = [CCLabelTTF labelWithString:@"  0" fontName:fontname fontSize:22];
-    scoreValueShadow.position =  ccp( 274, 459 );
-    scoreValueShadow.color=ccc3(255,255,255); 
+    scoreValueShadow.position =  ccp( 274, 460 );
+    scoreValueShadow.color=ccc3(0,0,0); 
     [self addChild:scoreValueShadow z:30];
     scoreValue = [CCLabelTTF labelWithString:@"  0" fontName:fontname fontSize:22];
-    scoreValue.position =  ccp( 275, 460 );
-    scoreValue.color=ccc3(0,0,0); 
-    [self addChild:scoreValue z:30];
+    scoreValue.position =  ccp( 275, 461 );
+    scoreValue.color=ccc3(255,255,255); 
+    [self addChild:scoreValue z:31];
     
     
     
@@ -147,38 +166,38 @@
     bobletext.position = ccp(110,70);
     bobletext.color=ccc3(0,0,0); 
     [self addChild:bobletext z:30];
-    /*
-     bobletext = [CCLabelTTF labelWithString:gname fontName:@"American Typewriter" fontSize:14];
-    bobletext.position = ccp(110,69);
-    bobletext.color=ccc3(0,0,0); 
-    [self addChild:bobletext z:30];
-    */
+    
+    txtMultiplier = [CCLabelTTF labelWithString:@"MULTIPLIER" fontName:fontname fontSize:12];
+    txtMultiplier.position = ccp(190,55);
+    txtMultiplier.color=ccc3(0,0,0); 
+    [self addChild:txtMultiplier z:30];
+    
     
     
     // BACKGROUND
     CCSprite *face;
     face = [CCSprite spriteWithFile:@"face.png"];
-    face.position = ccp(35,68);
+    face.position = ccp(35,60);
     [self addChild:face z:0];
     
     CCSprite *boble;
     boble = [CCSprite spriteWithFile:@"boble.png"];
-    boble.position = ccp(180,68);
+    boble.position = ccp(180,60);
     boble.opacity=180;
     [self addChild:boble z:0];
     
     
     
     /*
-    tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
-    tbutton2.position = ccp(158,68);
-    tbutton2.color=ccc3(255,255,255);
-    [self addChild:tbutton2 z:30];
-    tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
-    tbutton2.position = ccp(157,67);
-    tbutton2.color=ccc3(0,0,0);
-    [self addChild:tbutton2 z:30];
-    */
+     tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
+     tbutton2.position = ccp(158,68);
+     tbutton2.color=ccc3(255,255,255);
+     [self addChild:tbutton2 z:30];
+     tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
+     tbutton2.position = ccp(157,67);
+     tbutton2.color=ccc3(0,0,0);
+     [self addChild:tbutton2 z:30];
+     */
     // clear the board
 	memset(board, 0, sizeof(board));
 	
@@ -205,6 +224,7 @@
         case 0:
             //Maraton mode
             reqCrystals=100000;
+            difficultyLevel=1;
             break;
             
         case 1:
@@ -250,18 +270,17 @@
         case 8:
             // FINAL LEVEL
             difficultyLevel=4;
-            reqCrystals=75;
+            reqCrystals=7500000;
             break;
-    
+            
             
     }
-reqCrystals=5;
     
 }
 
 -(void) checkWinStatus{
     levelWon=NO;
-    //CCLOG(@"levelwon %i gameover %i gamemode %i",levelWon,gameIsOver,GameMode);
+    CCLOG(@"gamemode %i",GameMode);
     //CCLOG(@"allCrystals %i reqCrystals %i redCrystals %i",allCrystals,reqCrystals,redCrystals);
     NSString *txtGamemode;
     NSString *txtTmp;
@@ -307,9 +326,9 @@ reqCrystals=5;
             if(allCrystals>=reqCrystals)
                 levelWon=YES;
             break;
-        
+            
         case 2:
-        
+            
             // Level 1 -røde krystaller
             if(redCrystals<reqCrystals) remainingCrystals=reqCrystals-redCrystals;
             txtGamemode=[[NSString alloc] initWithFormat:@"%i %@ %@ %@  - %i %@ ",reqCrystals,red,krystaller,txtTmp,remainingCrystals,igjen];
@@ -375,31 +394,32 @@ reqCrystals=5;
             break;       
             
     }
- 
+    reqCrystals=1;
     if(levelWon){
         
         [self leverOver];
     }
-    /*
-     NSString *nytempStr = 
-    [[NSString alloc] initWithFormat:@"%@ bare %i av %i",txtGamemode,redCrystals,reqCrystals];
-*/
+ 
     NSString *nytempStr = 
     [[NSString alloc] initWithFormat:@"%@: %@",goal,txtGamemode];
-
+    
     bobletext.position=ccp(190,69);
     bobletext.fontSize=12;
     [bobletext setString:nytempStr];
     [bobletext draw];
+    
+    
+    
 }
 
 - (void) nextChallenge{
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
+    /*
+     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
         GameMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] intValue];
     }
     GameMode++;
+    */
     
-
     [self restartGame];
     
 }
@@ -407,8 +427,7 @@ reqCrystals=5;
 
 
 - (void) startGame {
-    //[self resetScores];
-    
+    self.isTouchEnabled = YES;     
     //CHECK GAMEMODE
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
         GameMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] intValue];
@@ -423,6 +442,7 @@ reqCrystals=5;
     [self resetScores];
     
     shakes=0;
+    shadowscore=0;
     sprites = [[NSMutableArray alloc] init];  
     tagtab=0;
     gameIsOver=NO;
@@ -440,9 +460,6 @@ reqCrystals=5;
     [self fillTable];
 	// Execute updateBoard 60 times per second.
 	[self schedule:@selector(updateBoard:) interval: 1.0 / 60.0];
-   
-	
-    
 }
 
 - (void) tryCreateBrick {
@@ -459,30 +476,50 @@ reqCrystals=5;
     }
     
 }
+- (void) tryCreateFiveBricks {
+    BOOL makeBricks;
+    makeBricks=YES;
+    for(int l=1;l<kLastColumn;l++){
+        if(nil!=board[l][0]){
+            makeBricks=NO;
+        }
+    }
+    
+    if(makeBricks) {
+	    [self createFiveBricks];
+    }
+    
+}
+
+
+- (void) removeText:(id) sender {
+    // CCLOG(@"called removetext in logic");
+    [self removeChild:sender cleanup:YES];
+    [self updateInfoDisplays];
+}
+
 
 - (void) fillTable{
-    
-   
-    
-    
     for(int y=0;y<kLastRow+1;y++){
         
         for(int x=1;x<=kLastColumn;x++){
-            [sprites addObject:[NSNumber numberWithInt:tagtab]];
-            
-            
-            brick1 = [Brick newBrick:difficultyLevel];
-            board[x][y] = brick1;
-            brick1.boardX = x; brick1.boardY = y;
-            brick1.position = COMPUTE_X_Y(x,y);
-            brick1.tag=tagtab;
-            [self addChild:brick1 z:2];
-            tagtab++;
-        }
-        
+            if(nil==board[x][y]){
+                [sprites addObject:[NSNumber numberWithInt:tagtab]];
+                
+                
+                brick1 = [Brick newBrick:difficultyLevel];
+                board[x][y] = brick1;
+                brick1.boardX = x; brick1.boardY = y;
+                brick1.position = COMPUTE_X_Y(x,y);
+                //CCLOG(@"tag %i",tagtab);
+                brick1.tag=tagtab;
+                [self addChild:brick1 z:2];
+                tagtab++;
+            }
+        } 
     }
     
-
+    
 }
 
 
@@ -501,6 +538,45 @@ reqCrystals=5;
     
 }
 
+
+- (void) createFiveBricks {
+    for(int x=2;x<kLastColumn;x++){
+        [sprites addObject:[NSNumber numberWithInt:tagtab]];
+        brick1 = [Brick  newBrick:difficultyLevel];
+        board[x][0] = brick1;
+        brick1.tag=tagtab;
+        brick1.boardX = x; brick1.boardY = 0;
+        brick1.position = COMPUTE_X_Y(x,0);
+        [self addChild:brick1 z:5];
+        tagtab++;
+	}
+    
+}
+- (void) tryCreateSomeBricks {
+    BOOL createBricks=NO;
+    for(int x=1;x<=kLastColumn;x++){
+        if(nil==board[x][0]){
+            createBricks=YES;
+            [sprites addObject:[NSNumber numberWithInt:tagtab]];
+            brick1 = [Brick  newBrick:difficultyLevel];
+            board[x][0] = brick1;
+            brick1.tag=tagtab;
+            brick1.boardX = x; brick1.boardY = 0;
+            brick1.position = COMPUTE_X_Y(x,0);
+            [self addChild:brick1 z:5];
+            tagtab++;
+        }
+    }
+    [self checkWinStatus];
+    if(!createBricks){
+  //      [self isGameOver];
+    }
+    
+}
+
+
+
+
 - (void) clearBoard{
     // REMOVES EVERYTHING
     [self resetScores];
@@ -511,6 +587,20 @@ reqCrystals=5;
     gameIsOver=NO;
     GameOver=NO;
     
+}
+- (void) fortsettSpill{
+    [self blankWindow];
+    [self removeChildByTag:100991 cleanup:YES];
+    [self removeChildByTag:100993 cleanup:YES];
+    [self removeChildByTag:100994 cleanup:YES];
+    
+    [self removeChildByTag:100995 cleanup:YES];
+    [self removeChildByTag:100996 cleanup:YES];
+    [self removeChildByTag:100992 cleanup:YES];
+    [self removeChildByTag:100990 cleanup:YES];
+    [self schedule:@selector(updateBoard:) interval: 1.0 / 60.0];
+    self.isTouchEnabled = YES;
+    //[[CCDirector sharedDirector] startAnimation];
 }
 
 - (void) showMenu{
@@ -536,7 +626,11 @@ reqCrystals=5;
     
 }
 
+
+
 - (void) restartGame {
+    //[[CCDirector sharedDirector] stopAnimation];
+    
     // REMOVES EVERYTHING
     [self removeAllChildrenWithCleanup:YES];
     
@@ -546,29 +640,17 @@ reqCrystals=5;
     
     [self blankWindow];
     
+    
     gameIsOver=NO;
     GameOver=NO;
     moveCycleRatio = 45;
     shakes=0;
-    //difficultyLevel=1;
-    
-    //[self removeChildByTag:999 cleanup:YES];
-	
-    
-	for (int x = 0; x <= kLastColumn; x++) {
-		for (int y = 0; y <= kLastRow; y++) {
-			
-			brick1= board[x][y];
-			  
-            score=0;
-                [self removeChild:brick1 cleanup:YES];
-                brick1 = nil;
-                board[x][y] = nil;
-              
-			
-		} // End of for y loop.
-	} // End of for x loop.
+    shadowscore=0;
+   
     [self fillTable];
+    [self schedule:@selector(updateBoard:) interval: 1.0 / 60.0];
+    self.isTouchEnabled = YES;
+    
     
 }
 
@@ -595,15 +677,97 @@ reqCrystals=5;
         temp.scaleY=s.height;
     }
     temp.opacity=150; // this will cover whole screen with white color
-    temp.tag=994;
+    temp.tag=100994;
     //[temp runAction:[CCFadeTo actionWithDuration:1 opacity:30]];  //255 to 0
     
- 
+    
+}
+
+
+- (void) pauseGame{
+    self.isTouchEnabled = NO;
+    [self unschedule: @selector(updateBoard:)];
+
+    [self dimScreen]; 
+    //self.isTouchEnabled = NO;
+    //[self unschedule: @selector(updateBoard:)];
+    // SVENARDO + FEEDBACKBOKS
+    CCSprite *feedback;
+    feedback = [CCSprite spriteWithFile:@"feedback.png"];
+    feedback.position = ccp(160,240);
+    feedback.tag=100995;
+    feedback.opacity=230;
+    [self addChild:feedback z:90];
+    
+    CCSprite *svenardo;
+    svenardo = [CCSprite spriteWithFile:@"svenardo1.png"];
+    svenardo.position = ccp(180,180);
+    svenardo.tag=100992;
+    [self addChild:svenardo z:90];
+    
+    
+    
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    
+    NSString *text=NSLocalizedString(@"txtPause", @"");
+    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:18.0f]
+                       constrainedToSize:CGSizeMake(self.contentSize.width-100, CGFLOAT_MAX)
+                           lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    CCLabelTTF *textLabel;
+    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:18.0f];
+    textLabel.color=ccc3(222,161,87);
+    textLabel.tag=100993;
+    // CGSize s = [[CCDirector sharedDirector] winSize]; 
+    //textLabel.position=ccp(s.width/2,s.height/2);
+    textLabel.position=ccp(s.width/2,340);
+    
+    [self addChild: textLabel z:100];
+    
+    
+    //OPTIONS
+    NSString *txtContinue=NSLocalizedString(@"txtUCContinue", @"");
+    NSString *txtRestartGame=NSLocalizedString(@"Restart", @"");
+    
+    NSString *txtMenu=NSLocalizedString(@"Menu", @"");
+    
+    
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
+    CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
+    item1.color=ccc3(222,161,87);
+    
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
+    CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
+    item2.color=ccc3(222,161,87);
+    
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtContinue fontName:@"American Typewriter" fontSize:14];
+    CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(fortsettSpill)];
+    item3.color=ccc3(222,161,87);
+    
+    
+    
+    
+    CCMenu *menu = [CCMenu menuWithItems:
+                    item1, item2, item3,
+                    
+                    nil]; // 7 items.
+    [menu alignItemsInColumns:
+     [NSNumber numberWithUnsignedInt:3],
+     nil
+     ]; 
+    
+    [self addChild: menu z:10099 tag:100996];
+    [menu setPosition:ccp(s.width/2-10,290)];
+    
+        
 }
 
 - (void) leverOver{
     CCLOG(@"******************* LEVEL OVER");
-    gameIsOver=YES;
+    self.isTouchEnabled = NO;
+    [self unschedule: @selector(updateBoard:)];
+
     [self lagreHighscore];
     
     [self dimScreen]; 
@@ -616,24 +780,27 @@ reqCrystals=5;
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if(levelsUnlocked<GameMode){
-        CCLOG(@"*****!!** setter Levelsunlocked: %i",(GameMode+1));
-        [defaults setInteger:(GameMode+1) forKey:@"kLevelsUnlocked"];
+    if(levelsUnlocked<=GameMode){
+        CCLOG(@"*****!!** setter Levelsunlocked: %i",(levelsUnlocked+1));
+        [defaults setInteger:(levelsUnlocked++) forKey:@"kLevelsUnlocked"];
+        [defaults synchronize];
     }
-    [defaults synchronize];
+    GameMode++;
+    [defaults setInteger:(levelsUnlocked++) forKey:@"kPlayLastMode"];
+    
     
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
     feedback = [CCSprite spriteWithFile:@"feedback.png"];
     feedback.position = ccp(160,240);
-    feedback.tag=992;
+    feedback.tag=100992;
     feedback.opacity=230;
     [self addChild:feedback z:90];
     
     CCSprite *svenardo;
     svenardo = [CCSprite spriteWithFile:@"svenardo1.png"];
     svenardo.position = ccp(180,180);
-    svenardo.tag=992;
+    svenardo.tag=100992;
     [self addChild:svenardo z:90];
     
     
@@ -649,13 +816,13 @@ reqCrystals=5;
     CCLabelTTF *textLabel;
     textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:18.0f];
     textLabel.color=ccc3(222,161,87);
-    textLabel.tag=993;
-   // CGSize s = [[CCDirector sharedDirector] winSize]; 
+    textLabel.tag=100993;
+    // CGSize s = [[CCDirector sharedDirector] winSize]; 
     //textLabel.position=ccp(s.width/2,s.height/2);
     textLabel.position=ccp(s.width/2,340);
     
     [self addChild: textLabel z:100];
-
+    
     
     //OPTIONS
     NSString *txtNextLevel=NSLocalizedString(@"nextLevel", @"");
@@ -663,16 +830,16 @@ reqCrystals=5;
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     
     
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:16];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:16];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
     
-    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:@"American Typewriter" fontSize:16];
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:@"American Typewriter" fontSize:14];
     CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(nextChallenge)];
     item3.color=ccc3(222,161,87);
     
@@ -686,10 +853,10 @@ reqCrystals=5;
      nil
      ]; 
     
-    [self addChild: menu z:999];
+    [self addChild: menu z:10099];
     [menu setPosition:ccp(s.width/2,290)];
+    //[self unschedule: @selector(updateBoard:)];
     
-   
     
 }
 
@@ -703,12 +870,23 @@ reqCrystals=5;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:score forKey:@"kHighscore"];
         [defaults synchronize];
+        int64_t highscore;
+        highscore=(int64_t)playersHighscore;
+        //Send til gamecenter
+        [self reportScore:highscore forCategory:@"S001"];
     }
+    int64_t highscore;
+    highscore=(int64_t)playersHighscore;
+    
+    [self reportScore:highscore forCategory:@"S001"];
     
 }
 
 
 - (void) gameOver {
+    self.isTouchEnabled = NO;
+    [self unschedule: @selector(updateBoard:)];
+
     gameIsOver=YES;
     [self lagreHighscore];
     [self dimScreen];
@@ -717,14 +895,14 @@ reqCrystals=5;
     CCSprite *feedback;
     feedback = [CCSprite spriteWithFile:@"feedback.png"];
     feedback.position = ccp(160,240);
-    feedback.tag=992;
+    feedback.tag=100992;
     feedback.opacity=230;
     [self addChild:feedback z:90];
     
     CCSprite *svenardo;
     svenardo = [CCSprite spriteWithFile:@"svenardo2.png"];
     svenardo.position = ccp(180,180);
-    svenardo.tag=992;
+    svenardo.tag=100992;
     [self addChild:svenardo z:90];
     
     
@@ -740,22 +918,22 @@ reqCrystals=5;
     CCLabelTTF *textLabel;
     textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:18.0f];
     textLabel.color=ccc3(222,161,87);
-    textLabel.tag=993;
+    textLabel.tag=100993;
     // CGSize s = [[CCDirector sharedDirector] winSize]; 
     //textLabel.position=ccp(s.width/2,s.height/2);
     textLabel.position=ccp(s.width/2,340);
     
     [self addChild: textLabel z:100];
-
+    
     NSString *txtRestartGame=NSLocalizedString(@"Restart", @"");
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     
     
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:20];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:20];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
@@ -768,10 +946,9 @@ reqCrystals=5;
      nil
      ]; 
     
-    [self addChild: menu z:999];
+    [self addChild: menu z:10099];
     [menu setPosition:ccp(s.width/2,290)];
     
- 
 }
 
 // This method is the game logic loop. It gets called 60 times per second
@@ -780,27 +957,18 @@ reqCrystals=5;
 	[self moveBricksDown];
     
     if(!gameIsOver){
-    [self removeBricks];
+        [self removeBricks];
         
-    [self checkWinStatus];
-    
-    [self updateInfoDisplays];
+        if (frameCount % moveCycleRatio == 0) {
+            [self tryCreateSomeBricks]; 
+            
+            if(playAudio){
+                if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying])
+                    [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"funny_loop.mp3" loop:YES];
+            }
+            
         
-    if (frameCount % moveCycleRatio == 0) {
-        [self isGameOver];
-        
-        [self tryCreateBrick];
-        
-        
-        //CCLOG(@"playaudio %i",playAudio);        
-        //CCLOG(@"crystals %i",allCrystals);        
-
-        
-        if(playAudio){
-        if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying])
-            [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"funny_loop.mp3" loop:YES];
         }
-    }
     }
 }
 
@@ -815,92 +983,87 @@ reqCrystals=5;
     foundThree=NO;
     for (int l=0;l<[sprites count];l++){
         if(!foundThree){
-        Brick *brick3 = (Brick *)[self getChildByTag:l];
-        x=brick3.boardX;
-        y=brick3.boardY;
-        m=0;
-        if(nil!=brick3){
-            [tempGrouping addObject:brick3];
-            Brick *nbrick;                
-            
-            keepchecking=YES;
-            while(keepchecking){
+            Brick *brick3 = (Brick *)[self getChildByTag:l];
+            x=brick3.boardX;
+            y=brick3.boardY;
+            m=0;
+            if(nil!=brick3){
+                [tempGrouping addObject:brick3];
+                Brick *nbrick;                
                 
-                brickfound=NO;
-                for (int l=0;l<[tempGrouping count];l++){
-                    //CCLOG(@"loopround %i ",l);
-                    Brick *brick = [tempGrouping objectAtIndex:l];
-                    //CCLOG(@"bricktype %i",brick.brickType);
-                    if(brick.boardY>0 && brick.boardY <=kLastRow){ 
-                        nbrick=board[brick.boardX][brick.boardY-1];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick3.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{    
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
+                keepchecking=YES;
+                while(keepchecking){
+                    
+                    brickfound=NO;
+                    for (int l=0;l<[tempGrouping count];l++){
+                        //CCLOG(@"loopround %i ",l);
+                        Brick *brick = [tempGrouping objectAtIndex:l];
+                        //CCLOG(@"bricktype %i",brick.brickType);
+                        if(brick.boardY>0 && brick.boardY <=kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY-1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{    
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                        
+                                    }
                                 }
-                            }
-                        } }
-                    
-                    if(brick.boardY>=0 && brick.boardY <kLastRow){ 
-                        nbrick=board[brick.boardX][brick.boardY+1];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick3.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
+                            } }
+                        
+                        if(brick.boardY>=0 && brick.boardY <kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY+1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;   
+                                    }
+                                }    
+                            } }                     
+                        
+                        if(brick.boardX>0 && brick.boardX <kLastColumn){ 
+                            nbrick=board[brick.boardX-1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;   
+                                    }
                                 }
-                            }    
-                        } }                     
-                    
-                    if(brick.boardX>0 && brick.boardX <kLastColumn){ 
-                        nbrick=board[brick.boardX-1][brick.boardY];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick3.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
+                            } }
+                        
+                        if(brick.boardX>0 && brick.boardX <kLastColumn){ 
+                            nbrick=board[brick.boardX+1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                        
+                                    }
                                 }
-                            }
-                        } }
+                            } }
+                        
+                        
+                    }
                     
-                    if(brick.boardX>0 && brick.boardX <kLastColumn){ 
-                        nbrick=board[brick.boardX+1][brick.boardY];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick3.brickType){
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
-                                }
-                            }
-                        } }
-                    
-                    
+                    if(brickfound) keepchecking=YES; else keepchecking=NO;
                 }
                 
-                if(brickfound) keepchecking=YES; else keepchecking=NO;
-            }
-            
-        }  
+            }  
         }
         if([tempGrouping count] > 2){
-           foundThree=YES;
-           /*
-            //CCLOG(@"FOund %i!",[tempGrouping count]);
-           for (int l=0;l<[tempGrouping count];l++){
-               Brick *brick = [tempGrouping objectAtIndex:l];
-             //  CCLOG(@"bricktype %i, %ix%i",brick.brickType,brick.boardX,brick.boardY);
-
-           }
-            */
-       }
-    
+            foundThree=YES;
+            
+        }
+        CCLOG(@"FOund %i!",[tempGrouping count]);
         [tempGrouping removeAllObjects];
-
+        
     } 
     
     if(!foundThree){
@@ -909,7 +1072,7 @@ reqCrystals=5;
         GameOver=YES;
     }
     
-       
+    
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -927,13 +1090,18 @@ reqCrystals=5;
     BOOL brickfound;
     brickfound=NO;
     int x,y,m;
-    
-    if((int)point.y>0 && (int)point.y<=80
-       && (int)point.x>120 && (int)point.x <= 240){
-        //CCLOG(@"restart");
-        [self restartGame];
+    /*
+     if((int)point.y>0 && (int)point.y<=80
+     && (int)point.x>120 && (int)point.x <= 240){
+     //CCLOG(@"restart");
+     [self restartGame];
+     } 
+     */
+    if((int)point.y>450 && (int)point.y<=480
+       && (int)point.x>0 && (int)point.x <= 90){
+        [self pauseGame];        
     } 
-    
+    //CCLOG(@"x%i y%i",(int)point.x,(int)point.y);
     
     for (int l=0;l<[sprites count];l++){
         
@@ -945,73 +1113,73 @@ reqCrystals=5;
             y=brick3.boardY;
             m=0;
             if(nil!=brick3){
-            [tempGrouping addObject:brick3];
-            Brick *nbrick;                
+                [tempGrouping addObject:brick3];
+                Brick *nbrick;                
                 
-            keepchecking=YES;
-            while(keepchecking){
-                
-                brickfound=NO;
-                for (int l=0;l<[tempGrouping count];l++){
-                    //CCLOG(@"loopround %i ",l);
-                    Brick *brick = [tempGrouping objectAtIndex:l];
-                    //CCLOG(@"bricktype %i",brick.brickType);
-                    if(brick.boardY>0 && brick.boardY <=kLastRow){ 
-                        nbrick=board[brick.boardX][brick.boardY-1];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{    
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
-                                }
-                            }
-                        } }
-                      
-                    if(brick.boardY>=0 && brick.boardY <kLastRow){ 
-                        nbrick=board[brick.boardX][brick.boardY+1];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
-                                }
-                            }    
-                        } }                     
-                   
-                    if(brick.boardX>0 && brick.boardX <=kLastColumn){ 
-                        nbrick=board[brick.boardX-1][brick.boardY];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick.brickType){ 
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
-                                }
-                        }
-                        } }
+                keepchecking=YES;
+                while(keepchecking){
                     
-                    if(brick.boardX>0 && brick.boardX <kLastColumn){ 
-                        nbrick=board[brick.boardX+1][brick.boardY];
-                        if(nil!=nbrick){ 
-                            if(nbrick.brickType==brick.brickType){
-                                if ([tempGrouping containsObject:nbrick]){
-                                }else{
-                                    [tempGrouping addObject:nbrick];
-                                    brickfound=YES;     
+                    brickfound=NO;
+                    for (int l=0;l<[tempGrouping count];l++){
+                        //CCLOG(@"loopround %i ",l);
+                        Brick *brick = [tempGrouping objectAtIndex:l];
+                        //CCLOG(@"bricktype %i",brick.brickType);
+                        if(brick.boardY>0 && brick.boardY <=kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY-1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{    
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
                                 }
-                            }
-                        } }
+                            } }
+                        
+                        if(brick.boardY>=0 && brick.boardY <kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY+1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }    
+                            } }                     
+                        
+                        if(brick.boardX>0 && brick.boardX <=kLastColumn){ 
+                            nbrick=board[brick.boardX-1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick.brickType){ 
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }
+                            } }
+                        
+                        if(brick.boardX>0 && brick.boardX <kLastColumn){ 
+                            nbrick=board[brick.boardX+1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick.brickType){
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }
+                            } }
+                        
+                        
+                    }
                     
-                   
+                    if(brickfound) keepchecking=YES; else keepchecking=NO;
                 }
-                            
-                if(brickfound) keepchecking=YES; else keepchecking=NO;
-            }
-            
-        }  
-       } 
+                
+            }  
+        } 
     }
     
     
@@ -1022,7 +1190,7 @@ reqCrystals=5;
         }
     }
     
-   
+    
     
 }
 
@@ -1031,16 +1199,17 @@ reqCrystals=5;
 }
 
 
- - (void) moveBrickDown:(Brick *)brick {
+- (void) moveBrickDown:(Brick *)brick {
 	board[brick.boardX][brick.boardY] = nil;
-	board[brick.boardX][brick.boardY + 1] = brick;
-    //brick.moveDown;
-     [brick moveDown];
-     
+    if(nil==board[brick.boardX][brick.boardY + 1]){
+        board[brick.boardX][brick.boardY + 1] = brick;
+        [brick moveDown];
+    }
+    
 }
 
 
- 
+
 - (void) removeBricks {	
 	//Brick *brick = nil;
     //sprites = [[NSMutableArray alloc] init];  
@@ -1057,7 +1226,7 @@ reqCrystals=5;
 			// Is this block disappearing?
 			if (nil != brick1 && brick1.disappearing) {
 				allCrystals++;
-                
+                CCLOG(@"brick %d",brick1);
                 switch(brick1.brickType){
                     case 0: redCrystals++; break;
                     case 1: yellowCrystals++; break;
@@ -1072,15 +1241,31 @@ reqCrystals=5;
                     playsound1=NO;
                     playsound2=YES;
                 }
-                //float remx=(float)brick1.position.x;
-                //float remy=(float)brick1.position.y;
+                float remx=(float)brick1.position.x;
+                float remy=(float)brick1.position.y;
                 [sprites removeObject:brick1];
                 //CCLOG(@"removing brick %i %i",brick1.boardX,brick1.boardY);
                 [self removeChild:brick1 cleanup:YES];
-                score += (((difficultyLevel)*13)*j);
+                score += (((difficultyLevel)*5)*(2+j));
+                shadowscore +=(((difficultyLevel)*5)*(2+j));
+                //CCLOG(@"shadowscore: %i",shadowscore);
+                //CCLOG(@"difficulty: %i",difficultyLevel);
+                [FloatScore createExplosionX:remx y:remy localScore:(((difficultyLevel)*5)*(2+j)) inParent:self];
+                
+                if(shadowscore > 15000){
+                    difficultyLevel++;
+                    shadowscore=0;
+                    NSString *tempDiff = 
+                    [[NSString alloc] initWithFormat:@"%d",difficultyLevel];
+                    
+                    [difficultyText setString:tempDiff];
+                    [difficultyText draw];
+                    
+                }
+                
                 brick1 = nil;
                 board[x][y] = nil;
-               // [ParticleFunctions createExplosionX:remx y:remy inParent:self];
+                [ParticleFunctions createExplosionX:remx y:remy inParent:self];
                 j++;
 			}
             
@@ -1089,14 +1274,14 @@ reqCrystals=5;
     
     //CCLOG(@"playSoundFX %i",playSoundFX);    
     if(playSoundFX){
-    if(playsound1) [[SimpleAudioEngine sharedEngine] playEffect:@"button-39.mp3"];
-    if(playsound2) [[SimpleAudioEngine sharedEngine] playEffect:@"button-38.mp3"];
+        if(playsound1) [[SimpleAudioEngine sharedEngine] playEffect:@"button-39.mp3"];
+        if(playsound2) [[SimpleAudioEngine sharedEngine] playEffect:@"button-38.mp3"];
     }
 }
- 
+
 
 - (void) moveBricksDown {	
-		
+    
     [self tryCreateBrick];
 	
 	for (int x = kLastColumn; x >= 0; x--) {
@@ -1107,7 +1292,7 @@ reqCrystals=5;
 				if ( kLastRow != y && (nil == board[x][y + 1]) ) {
 					
 					[self moveBrickDown:brick1];
-					                 
+                    
 					
 				} 
 				
@@ -1120,40 +1305,12 @@ reqCrystals=5;
 
 - (void) updateInfoDisplays {
 	static int oldScore = 0;
-    int oldDifficultylevel = difficultyLevel;
-	//CCLOG(@"*** diffi %i ****",difficultyLevel);
-    
-    if(score<5000){
-        if(difficultyLevel<=1) difficultyLevel=1;
-    }
-    if(score>10000){
-        if(difficultyLevel<2) difficultyLevel=2;
-    }
-    if(score>15000){
-        if(difficultyLevel<3) difficultyLevel=3;
-    }
-    if(score>20000){
-        if(difficultyLevel<4) difficultyLevel=4;
-    }
-    //CCLOG(@"*** diffi2 %i ****",difficultyLevel);
-
-    if(oldDifficultylevel != difficultyLevel){
-        NSString *tempDiff = 
-        [[NSString alloc] initWithFormat:@"%d",difficultyLevel];
-		
-    	[difficultyText setString:tempDiff];
-		[difficultyText draw];
-        
-	//	[scoreValueShadow setString:tempStr];
-	//	[scoreValueShadow draw];
-	
-    }
     
 	
     if (oldScore != score) {
 		oldScore = score;
 		NSString *tempStr = 
-			[[NSString alloc] initWithFormat:@"%d",score];
+        [[NSString alloc] initWithFormat:@"%d",score];
 		[scoreValue setString:tempStr];
 		[scoreValue draw];
 		[scoreValueShadow setString:tempStr];

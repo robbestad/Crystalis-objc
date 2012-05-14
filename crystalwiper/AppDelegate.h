@@ -10,7 +10,6 @@
 #import "cocos2d.h"
 #import "AdViewController.h"
 
-
 @interface AppController : NSObject <UIApplicationDelegate, CCDirectorDelegate>
 {
 	UIWindow *window_;

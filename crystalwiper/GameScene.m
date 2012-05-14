@@ -2,7 +2,6 @@
 //  GameScene.m
 
 #import "GameScene.h"
-
 #import "GameLogicLayer.h"
 
 @implementation GameScene
@@ -17,7 +16,7 @@
         CCLayer *layer = [GameLogicLayer node];
 		[self addChild:layer z:1];
         
-        background4 = [CCSprite spriteWithFile:@"seigmenn.jpg"];
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
         background4.position = ccp(160,240);
         background5 = [CCSprite spriteWithFile:@"transparent.png"];
         background5.position = ccp(160,272);
@@ -30,7 +29,7 @@
     
         
         
-          
+         
         CGSize s = [[CCDirector sharedDirector] winSizeInPixels]; 
         CCSprite *temp=[CCSprite spriteWithFile:@"blackpixel.png"];
         temp.position=ccp(s.width/2,s.height/2);
