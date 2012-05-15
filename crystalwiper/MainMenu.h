@@ -54,3 +54,14 @@
 }
 +(id) scene;
 @end
+
+
+
+@interface LayerStats : CCLayer
+{
+    UIButton *button;
+	CCUIViewWrapper *wrapper;
+    
+}
+@end
+

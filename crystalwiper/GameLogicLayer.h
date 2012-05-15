@@ -18,7 +18,7 @@
 	// SET UP THE BOARD
 	Brick *board[kLastColumn + 1][kLastRow + 1];
 	Brick  *brick1, *brick2;
-    int GameMode;
+    int GameMode, MaxLevels;
     int reqCrystals,allCrystals,redCrystals,greenCrystals,blueCrystals, yellowCrystals,purpleCrystals,iceCrystals;
     BOOL levelWon, GameOver,playAudio,playSoundFX;
     
@@ -26,7 +26,7 @@
 	int frameCount;
 	int moveCycleRatio;
     int score, shadowscore;
-    BOOL gameIsOver;
+    BOOL gameIsOver, GameModeChanged;
     float locationX;
     float locationY;
     int rand1,rand2,difficultyLevel;
@@ -36,7 +36,7 @@
     int maxbricks;
     int remainingshakes;
 	CCLabelTTF *scoreLabel, *scoreValue, *scoreValueShadow;
-    CCLabelTTF *logotext, *bobletext, *difficultyText, *txtMultiplier;
+    CCLabelTTF *logotext, *bobletext, *difficultyText, *Multiplier;
     CCLabelTTF *shakeLabel;
     
     CCLabelTTF *tbutton2, *shaketext;

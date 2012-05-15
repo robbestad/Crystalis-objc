@@ -42,13 +42,7 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
-		// this tells Cocos2d to call our touch event handlers
-		
-        
-        //self.isAccelerometerEnabled = NO;
-        //[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1/60];
-        //shake_once = false;
-        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
+		if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
             playAudio = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] intValue];
         }
         else {
@@ -115,7 +109,8 @@
 
 - (void) initMenu{
     
-    NSString *gname=NSLocalizedString(@"GameName", @"");
+    NSString *txtMultiplier=NSLocalizedString(@"txtMultiplier", @"");
+    NSString *gname=NSLocalizedString(@"Menu", @"");
     NSString *fontname=@"American Typewriter";
     logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
     logotext.position = ccp(55,460);
@@ -134,8 +129,8 @@
      difficultyText.color=ccc3(255,255,255); 
      [self addChild:difficultyText z:30];
      */
-    difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:24];
-    difficultyText.position = ccp(150,460);
+    difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:12];
+    difficultyText.position = ccp(220,55);
     difficultyText.color=ccc3(0,0,0); 
     [self addChild:difficultyText z:30];
     
@@ -162,15 +157,15 @@
     
     
     //BOBLETEKST
-    bobletext = [CCLabelTTF labelWithString:@"WELCOME" fontName:fontname fontSize:14];
-    bobletext.position = ccp(110,70);
+    bobletext = [CCLabelTTF labelWithString:@"WIPER" fontName:fontname fontSize:14];
+    bobletext.position = ccp(190,70);
     bobletext.color=ccc3(0,0,0); 
     [self addChild:bobletext z:30];
     
-    txtMultiplier = [CCLabelTTF labelWithString:@"MULTIPLIER" fontName:fontname fontSize:12];
-    txtMultiplier.position = ccp(190,55);
-    txtMultiplier.color=ccc3(0,0,0); 
-    [self addChild:txtMultiplier z:30];
+    Multiplier = [CCLabelTTF labelWithString:txtMultiplier fontName:fontname fontSize:12];
+    Multiplier.position = ccp(175,55);
+    Multiplier.color=ccc3(0,0,0); 
+    [self addChild:Multiplier z:30];
     
     
     
@@ -215,7 +210,7 @@
     yellowCrystals=0;
     purpleCrystals=0;
     iceCrystals=0;
-    
+    difficultyLevel=1;
     levelWon=NO;
     gameIsOver=NO;
     CCLOG(@"gamemode %i",GameMode);
@@ -275,11 +270,14 @@
             
             
     }
-    
+    //DEBUG
+    //reqCrystals=1; 
+    //STOP
 }
 
 -(void) checkWinStatus{
     levelWon=NO;
+    if(GameMode>8)GameMode=8;
     CCLOG(@"gamemode %i",GameMode);
     //CCLOG(@"allCrystals %i reqCrystals %i redCrystals %i",allCrystals,reqCrystals,redCrystals);
     NSString *txtGamemode;
@@ -385,16 +383,13 @@
             
         case 8:
             // Level 8-final
-            if(iceCrystals<reqCrystals) remainingCrystals=reqCrystals-iceCrystals;
             if(playersHighscore>0)
                 txtGamemode=[[NSString alloc] initWithFormat:@"%@ (%i %@) ",beatultimatehighscore,playersHighscore,poeng];
             
-            if(iceCrystals>=reqCrystals)
-                levelWon=YES;
             break;       
             
     }
-    reqCrystals=1;
+   
     if(levelWon){
         
         [self leverOver];
@@ -414,12 +409,11 @@
 
 - (void) nextChallenge{
     /*
-     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
         GameMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] intValue];
     }
     GameMode++;
-    */
-    
+    */    
     [self restartGame];
     
 }
@@ -440,7 +434,8 @@
      */
     
     [self resetScores];
-    
+    MaxLevels=8;
+    GameModeChanged=NO;
     shakes=0;
     shadowscore=0;
     sprites = [[NSMutableArray alloc] init];  
@@ -569,7 +564,7 @@
     }
     [self checkWinStatus];
     if(!createBricks){
-  //      [self isGameOver];
+        [self isGameOver];
     }
     
 }
@@ -630,6 +625,15 @@
 
 - (void) restartGame {
     //[[CCDirector sharedDirector] stopAnimation];
+    
+    if(GameMode!=0 && GameModeChanged){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setInteger:(GameMode--) forKey:@"kPlayLastMode"];
+        [defaults synchronize];
+        GameModeChanged=NO;
+        GameMode--;
+    }
+        
     
     // REMOVES EVERYTHING
     [self removeAllChildrenWithCleanup:YES];
@@ -732,16 +736,17 @@
     
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     
+    NSString *fontname=@"LCD";
     
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtContinue fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtContinue fontName:fontname fontSize:12];
     CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(fortsettSpill)];
     item3.color=ccc3(222,161,87);
     
@@ -780,14 +785,19 @@
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if(levelsUnlocked<=GameMode){
-        CCLOG(@"*****!!** setter Levelsunlocked: %i",(levelsUnlocked+1));
-        [defaults setInteger:(levelsUnlocked++) forKey:@"kLevelsUnlocked"];
+    if(levelsUnlocked<=GameMode && GameMode<MaxLevels){
+        CCLOG(@"*****!!** setter Levelsunlocked: %i",(GameMode++));
+        [defaults setInteger:(GameMode++) forKey:@"kLevelsUnlocked"];
         [defaults synchronize];
     }
-    GameMode++;
-    [defaults setInteger:(levelsUnlocked++) forKey:@"kPlayLastMode"];
-    
+    CCLOG(@"maxlevels %i",MaxLevels);
+    if(GameMode<MaxLevels){
+        GameMode++;
+        CCLOG(@"setter nexte %i",GameMode++);
+        [defaults setInteger:(GameMode++) forKey:@"kPlayLastMode"];
+        [defaults synchronize];
+        GameModeChanged=YES;
+    }
     
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
@@ -829,27 +839,27 @@
     NSString *txtRestartGame=NSLocalizedString(@"Restart", @"");
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     
-    
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
+    NSString *fontname=@"LCD";
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
     
-    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:fontname fontSize:12];
     CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(nextChallenge)];
     item3.color=ccc3(222,161,87);
     
     
     CCMenu *menu = [CCMenu menuWithItems:
-                    item1, item2, item3,
+                    item1,  item3,
                     
                     nil]; // 7 items.
     [menu alignItemsInColumns:
-     [NSNumber numberWithUnsignedInt:3],
+     [NSNumber numberWithUnsignedInt:2],
      nil
      ]; 
     
@@ -865,11 +875,11 @@
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kHighscore"] != nil) { 
         playersHighscore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kHighscore"] intValue];
     }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
     if(score>playersHighscore){
         //Lagre ny highscore
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:score forKey:@"kHighscore"];
-        [defaults synchronize];
         int64_t highscore;
         highscore=(int64_t)playersHighscore;
         //Send til gamecenter
@@ -877,6 +887,56 @@
     }
     int64_t highscore;
     highscore=(int64_t)playersHighscore;
+    
+    int kAllCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kAllCrystals"] != nil) { 
+        kAllCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kAllCrystals"] intValue];
+    }
+    [defaults setInteger:kAllCrystals+allCrystals forKey:@"kAllCrystals"];
+    
+    int kRedCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] != nil) { 
+        kRedCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] intValue];
+        CCLOG(@" red er %i",kRedCrystals);
+    }
+    [defaults setInteger:kRedCrystals+redCrystals forKey:@"kRedCrystals"];
+     CCLOG(@"setter red %i",kRedCrystals+redCrystals);
+    
+    int kGreenCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kGreenCrystals"] != nil) { 
+        kGreenCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kGreenCrystals"] intValue];
+    }
+    [defaults setInteger:kGreenCrystals+greenCrystals forKey:@"kGreenCrystals"];
+    
+    
+    int kBlueCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kBlueCrystals"] != nil) { 
+        kBlueCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kBlueCrystals"] intValue];
+    }
+    [defaults setInteger:kBlueCrystals+blueCrystals forKey:@"kBlueCrystals"];
+    
+    int kYellowCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kYellowCrystals"] != nil) { 
+        kYellowCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kYellowCrystals"] intValue];
+    }
+    [defaults setInteger:kYellowCrystals+yellowCrystals forKey:@"kYellowCrystals"];
+    
+    int kIceCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kIceCrystals"] != nil) { 
+        kIceCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kIceCrystals"] intValue];
+    }
+    [defaults setInteger:kIceCrystals+iceCrystals forKey:@"kIceCrystals"];
+    
+    
+    int kPurpleCrystals=0;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPurpleCrystals"] != nil) { 
+        kPurpleCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPurpleCrystals"] intValue];
+    }
+    [defaults setInteger:kPurpleCrystals+purpleCrystals forKey:@"kPurpleCrystals"];
+    
+    
+    
+    [defaults synchronize];
     
     [self reportScore:highscore forCategory:@"S001"];
     
@@ -927,13 +987,13 @@
     
     NSString *txtRestartGame=NSLocalizedString(@"Restart", @"");
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
+    NSString *fontname=@"LCD";
     
-    
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:@"American Typewriter" fontSize:14];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
@@ -1061,13 +1121,19 @@
             foundThree=YES;
             
         }
-        CCLOG(@"FOund %i!",[tempGrouping count]);
+        /*
+        for (int kk=0;kk<[tempGrouping count];kk++){
+            Brick *brick = [tempGrouping objectAtIndex:kk];
+            brick.disappearing=YES;
+        }
+        */
+        //CCLOG(@"FOund %i!",[tempGrouping count]);
         [tempGrouping removeAllObjects];
         
     } 
     
     if(!foundThree){
-        CCLOG(@"GAME OVER!"); 
+        //CCLOG(@"GAME OVER!"); 
         [self gameOver];
         GameOver=YES;
     }
@@ -1235,7 +1301,6 @@
                     case 4: blueCrystals++; break;
                     case 5: iceCrystals++; break;
                 }
-                
                 playsound1=YES;
                 if(j>4){
                     playsound1=NO;
@@ -1267,9 +1332,12 @@
                 board[x][y] = nil;
                 [ParticleFunctions createExplosionX:remx y:remy inParent:self];
                 j++;
+                 CCLOG(@"red:%i yel:%i green:%i lilla:%i blue:%i ice:%i",redCrystals,yellowCrystals,greenCrystals,purpleCrystals,blueCrystals,iceCrystals);
 			}
             
 		}
+       
+        
 	}
     
     //CCLOG(@"playSoundFX %i",playSoundFX);    

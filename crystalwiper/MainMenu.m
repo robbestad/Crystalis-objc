@@ -101,8 +101,7 @@ enum {
 			// IMPORTANT: It is safe to use "self" because CCMenuItem#cleanup will break any possible circular reference.
 			//self->disabledItem.isEnabled = ~self->disabledItem.isEnabled;
            // id appDelegate = [[UIApplication sharedApplication] delegate];           
-            //[[CCDirector  sharedDirector] replaceScene:[GameScene node]];
-            
+              [[CCDirector  sharedDirector] replaceScene:[GameScene node] ];
             
 		}];
         
@@ -184,8 +183,23 @@ enum {
 		[item5 setFontSize:32];
 		[item5 setFontName:fontname];
         item5.color=ccc3(0,0,0);
+        
+        // OM SPILLET
+        NSString *txtStats=NSLocalizedString(@"Stats", @"");
+        
+		CCMenuItemFont *item7 = [CCMenuItemFont itemWithString: txtStats block:^(id sender) {
+			// IMPORTANT: It is safe to use "self" because CCMenuItem#cleanup will break any possible circular reference.
+			//self->disabledItem.isEnabled = ~self->disabledItem.isEnabled;
+            CCScene *scene = [CCScene node];
+            [scene addChild:[LayerStats node]];
+            [[CCDirector sharedDirector] pushScene:scene];			
+        }];
+        
+		[item7 setFontSize:32];
+		[item7 setFontName:fontname];
+        item7.color=ccc3(0,0,0);
        
-		CCMenu *menu = [CCMenu menuWithItems: item2, item3, item4, item6, item5, nil];
+		CCMenu *menu = [CCMenu menuWithItems:  item3, item4, item6, item5, item7, nil];
 		[menu alignItemsVertically];
         
         
@@ -666,7 +680,7 @@ enum {
 
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
     	}];
-        item3.color=ccc3(87,117,112);
+        item3.color=ccc3(0,255,0);
         
         
             
@@ -681,7 +695,7 @@ enum {
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
     	}
         }];
-        if(levelsUnlocked<2){item4.color=ccc3(0,0,0);} else {item4.color=ccc3(87,117,112);}
+        if(levelsUnlocked<2){item4.color=ccc3(255,0,0);} else {item4.color=ccc3(0,255,0);}
             
         
             
@@ -697,7 +711,7 @@ enum {
                 [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<3){item5.color=ccc3(0,0,0);} else {item5.color=ccc3(87,117,112);}
+        if(levelsUnlocked<3){item5.color=ccc3(255,0,0);} else {item5.color=ccc3(0,255,0);}
         
         CCMenuItemFont *item6 = [CCMenuItemFont itemWithString:[[NSString alloc] initWithFormat:@"%@ %@",txtLevel,@"4"] block:^(id sender) {
             if(levelsUnlocked<4){
@@ -710,7 +724,7 @@ enum {
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<4){item6.color=ccc3(0,0,0);} else {item6.color=ccc3(87,117,112);}
+        if(levelsUnlocked<4){item6.color=ccc3(255,0,0);} else {item6.color=ccc3(0,255,0);}
         
         
         
@@ -725,7 +739,7 @@ enum {
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<5){item7.color=ccc3(0,0,0);} else {item7.color=ccc3(87,117,112);}
+        if(levelsUnlocked<5){item7.color=ccc3(255,0,0);} else {item7.color=ccc3(0,255,0);}
         
         
         
@@ -741,7 +755,7 @@ enum {
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<6){item8.color=ccc3(0,0,0);} else {item8.color=ccc3(87,117,112);}
+        if(levelsUnlocked<6){item8.color=ccc3(255,0,0);} else {item8.color=ccc3(0,255,0);}
         
         
         CCMenuItemFont *item9 = [CCMenuItemFont itemWithString:[[NSString alloc] initWithFormat:@"%@ %@",txtLevel,@"7"] block:^(id sender) {
@@ -756,7 +770,7 @@ enum {
 		    [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<7){item9.color=ccc3(0,0,0);} else {item9.color=ccc3(87,117,112); }
+        if(levelsUnlocked<7){item9.color=ccc3(255,0,0);} else {item9.color=ccc3(0,255,0); }
         
         
         CCMenuItemFont *item10 = [CCMenuItemFont itemWithString:[[NSString alloc] initWithFormat:@"%@ %@",txtLevel,@"8"] block:^(id sender) {
@@ -765,13 +779,13 @@ enum {
             } else {
                 
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                [defaults setInteger:7 forKey:@"kPlayLastMode"];
+                [defaults setInteger:8 forKey:@"kPlayLastMode"];
                 [defaults synchronize];
                 
                 [[CCDirector sharedDirector] replaceScene:[GameScene node]];
             }
     	}];
-        if(levelsUnlocked<8){item10.color=ccc3(0,0,0);} else {item10.color=ccc3(87,117,112); }
+        if(levelsUnlocked<8){item10.color=ccc3(255,0,0);} else {item10.color=ccc3(0,255,0); }
         
         
         item1.color=ccc3(0,0,0);
@@ -783,7 +797,7 @@ enum {
         [menu1 addChild:item7];
         [menu1 addChild:item8];
         [menu1 addChild:item9];
-		//[menu1 addChild:item10];
+		[menu1 addChild:item10];
 		[menu1 addChild:item1];
         
         
@@ -1043,6 +1057,256 @@ enum {
 
 @end
 
+#pragma mark - LayerStats
+@implementation LayerStats
+-(id) init
+{
+	if( (self = [super init] ) ) {
+		
+        //[self addUIViewItem];
+        
+        
+        NSString *fontname=@"American Typewriter";
+        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
+        background4.position = ccp(160,240);
+        [self addChild:background4 z:0];
+        
+        
+        NSString *txtCrystals, *txtCrystalsFormatted;
+        //Stat Highscore
+        int kHighscore=0;
+        
+        int item=0;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kHighscore"] != nil) { 
+            kHighscore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kHighscore"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"High Score ", @"");
+        NSString *txtHighscoreFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kHighscore];       
+        //ADD TO MENU
+        CCLabelTTF *label = [CCLabelTTF labelWithString:txtHighscoreFormatted
+                                               fontName:fontname
+                                               fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:label];
+
+        
+        //Stat all crystals
+        int kAllCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kAllCrystals"] != nil) { 
+            kAllCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kAllCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"AllCrystals", @"");
+        txtCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kAllCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtCrystalsFormatted
+                                               fontName:fontname
+                                               fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:label];
+
+        
+        //Stat red crystals
+        int kRedCrystals=0;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] != nil) { 
+            kRedCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] intValue];
+            CCLOG(@" red er %i",kRedCrystals);
+        }
+        txtCrystals=NSLocalizedString(@"RedCrystals", @"");
+        NSString *txtRedCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kRedCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtRedCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:label];
+        
+        
+        //Stat green crystals
+        int kGreenCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kGreenCrystals"] != nil) { 
+            kGreenCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kGreenCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"GreenCrystals", @"");
+        NSString *txtGreenCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kGreenCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtGreenCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item4 = [CCMenuItemLabel itemWithLabel:label];
+        
+        
+        
+        //Stat purple crystals
+        int kPurpleCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPurpleCrystals"] != nil) { 
+            kPurpleCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPurpleCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"PurpleCrystals", @"");
+        NSString *txtPurpleCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kPurpleCrystals];       
+        //ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtPurpleCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item5 = [CCMenuItemLabel itemWithLabel:label];
+        
+        
+        
+        //Stat blue crystals
+        int kBlueCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kBlueCrystals"] != nil) { 
+            kBlueCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kBlueCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"BlueCrystals", @"");
+        NSString *txtBlueCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kBlueCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtBlueCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item6 = [CCMenuItemLabel itemWithLabel:label];        
+        
+        //Stat yellow crystals
+        int kYellowCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kYellowCrystals"] != nil) { 
+            kYellowCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kYellowCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"YellowCrystals", @"");
+        NSString *txtYellowCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kYellowCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtYellowCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item7 = [CCMenuItemLabel itemWithLabel:label]; 
+
+        
+        
+        //Stat yellow crystals
+        int kIceCrystals=0;
+        item++;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"kIceCrystals"] != nil) { 
+            kIceCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kIceCrystals"] intValue];
+        }
+        txtCrystals=NSLocalizedString(@"IceCrystals", @"");
+        NSString *txtIceCrystalsFormatted=[[NSString alloc] initWithFormat:@"%@: %i",txtCrystals,kIceCrystals];       
+		//ADD TO MENU
+        label = [CCLabelTTF labelWithString:txtIceCrystalsFormatted
+                                   fontName:fontname
+                                   fontSize:16];
+        label.dimensions=CGSizeMake(250, 30);
+        CCMenuItemLabel *item8 = [CCMenuItemLabel itemWithLabel:label]; 		         
+                
+        
+        
+        
+		CCMenu *menu = [CCMenu menuWithItems: item1, item2, item3, item4, item5, item6, item7, item8, nil];
+		[menu alignItemsVertically];
+        
+        
+		// elastic effect
+		CGSize s = [[CCDirector sharedDirector] winSize];
+		int i=0;
+		for( CCNode *child in [menu children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+			child.position = ccp( dstPoint.x + offset, dstPoint.y);
+			[child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
+        
+		
+		[self addChild: menu];
+	    [menu setPosition:ccp(s.width/2+50, (s.height/2)-30)];
+        
+      
+
+        
+        
+        /*
+         NSString *text=@"Wiper er et spill der du skal forsøke å renske spillområdet for krystaller ved å peke på kombinasjoner med flere enn tre krystaller. Dess flere krystaller du klarer å kombinere, dess høyere blir din poengsum. Spillet er laget og publisert av Svenardo og er dedisert Ida Alana og Henry Alexander.";
+        
+        // self.contentSize.width is limiting the width of the label to this CCNode,
+        // in my case it's a new layer of a specific width and height and i don't
+        // want the text to go outside these demensions.
+        CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
+                           constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
+                               lineBreakMode:UILineBreakModeWordWrap];
+        
+        
+        CCLabelTTF *textLabel;
+        textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
+                                      fontName:fontname fontSize:16.0f];
+        CCLOG(@"textsize w%2.0f h%2.0f",textSize.width,textSize.height);
+        textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
+        //textLabel.position=ccpFromSize(textSize);
+        textLabel.color=ccc3(0,0,0);
+        [self addChild: textLabel];
+        */
+        
+        
+        
+        
+        
+        
+		// Menu - back to main
+        CCMenu *menu1 = [CCMenu node];
+        menu1.position=ccp(150,65);
+        
+		NSString *txtBacktomain=NSLocalizedString(@"Returntomain", @"");
+        
+		[CCMenuItemFont setFontName:fontname];
+		[CCMenuItemFont setFontSize:18];
+		CCMenuItemFont *mitem1 = [CCMenuItemFont itemWithString:txtBacktomain block:^(id sender) {
+			[[CCDirector sharedDirector] popScene];
+		}];
+        
+        mitem1.color=ccc3(0,0,0);
+        
+        i=0;
+		for( CCNode *child in [menu1 children] ) {
+			CGPoint dstPoint = child.position;
+			int offset = s.width/2 + 50;
+			if( i % 2 == 0)
+				offset = -offset;
+            child.position = ccp( dstPoint.x + offset, dstPoint.y);
+            [child runAction:
+			 [CCEaseElasticOut actionWithAction:
+			  [CCMoveBy actionWithDuration:2 position:ccp(dstPoint.x - offset,0)]
+										 period: 0.35f]
+             ];
+			i++;
+		}
+        
+        
+		[menu1 addChild:mitem1];
+        
+        [menu1 alignItemsVerticallyWithPadding:2  ];
+        [self addChild:menu1 z:100];
+        
+        
+        
+        
+	}
+	
+	return self;
+}
+
+
+
+@end
 
 
 #pragma mark - LayerPriorityTest
@@ -1110,10 +1374,13 @@ enum {
         
 		
 		// Menu 1
+        NSString *txtBacktomain=NSLocalizedString(@"Returntomain", @"");
+        
 		[CCMenuItemFont setFontName:fontname];
 		[CCMenuItemFont setFontSize:18];
-		CCMenuItemFont *item1 = [CCMenuItemFont itemWithString:@"Return to Main Menu" block:^(id sender) {
-			[[CCDirector sharedDirector] popScene];
+		CCMenuItemFont *item1 = [CCMenuItemFont itemWithString:txtBacktomain block:^(id sender) {
+			//[[CCDirector sharedDirector] popScene];
+            [[CCDirector sharedDirector] replaceScene:[MainMenu node]];
 		}];
         
         
