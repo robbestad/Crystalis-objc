@@ -39,7 +39,7 @@
             break;
         
         case 4:
-            if(brickType<3) brickType++;
+            if(brickType<2) brickType++;
             break;
             
         default:

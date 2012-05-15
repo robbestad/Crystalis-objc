@@ -130,7 +130,8 @@
      [self addChild:difficultyText z:30];
      */
     difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:12];
-    difficultyText.position = ccp(220,55);
+    //difficultyText.position = ccp(200,55);
+    difficultyText.position = ccp(250,55);
     difficultyText.color=ccc3(0,0,0); 
     [self addChild:difficultyText z:30];
     
@@ -163,7 +164,7 @@
     [self addChild:bobletext z:30];
     
     Multiplier = [CCLabelTTF labelWithString:txtMultiplier fontName:fontname fontSize:12];
-    Multiplier.position = ccp(175,55);
+    Multiplier.position = ccp(165,55);
     Multiplier.color=ccc3(0,0,0); 
     [self addChild:Multiplier z:30];
     
@@ -271,7 +272,7 @@
             
     }
     //DEBUG
-    //reqCrystals=1; 
+    reqCrystals=50; 
     //STOP
 }
 
@@ -408,12 +409,6 @@
 }
 
 - (void) nextChallenge{
-    /*
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
-        GameMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] intValue];
-    }
-    GameMode++;
-    */    
     [self restartGame];
     
 }
@@ -625,7 +620,7 @@
 
 - (void) restartGame {
     //[[CCDirector sharedDirector] stopAnimation];
-    
+    /*
     if(GameMode!=0 && GameModeChanged){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:(GameMode--) forKey:@"kPlayLastMode"];
@@ -633,6 +628,7 @@
         GameModeChanged=NO;
         GameMode--;
     }
+    */
         
     
     // REMOVES EVERYTHING
@@ -783,21 +779,22 @@
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kLevelsUnlocked"] != nil) { 
         levelsUnlocked = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kLevelsUnlocked"] intValue];
     }
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if(levelsUnlocked<=GameMode && GameMode<MaxLevels){
-        CCLOG(@"*****!!** setter Levelsunlocked: %i",(GameMode++));
-        [defaults setInteger:(GameMode++) forKey:@"kLevelsUnlocked"];
-        [defaults synchronize];
-    }
-    CCLOG(@"maxlevels %i",MaxLevels);
+
     if(GameMode<MaxLevels){
         GameMode++;
-        CCLOG(@"setter nexte %i",GameMode++);
-        [defaults setInteger:(GameMode++) forKey:@"kPlayLastMode"];
+        CCLOG(@"**** neste level: %i",GameMode);
+        [defaults setInteger:(GameMode) forKey:@"kPlayLastMode"];
         [defaults synchronize];
         GameModeChanged=YES;
     }
+    
+    if(levelsUnlocked<=GameMode && GameMode<MaxLevels){
+        [defaults setInteger:(GameMode) forKey:@"kLevelsUnlocked"];
+        [defaults synchronize];
+    }
+    
+    
     
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
@@ -883,7 +880,7 @@
         int64_t highscore;
         highscore=(int64_t)playersHighscore;
         //Send til gamecenter
-        [self reportScore:highscore forCategory:@"S001"];
+        [self reportScore:highscore forCategory:@"wiper"];
     }
     int64_t highscore;
     highscore=(int64_t)playersHighscore;
@@ -938,7 +935,7 @@
     
     [defaults synchronize];
     
-    [self reportScore:highscore forCategory:@"S001"];
+    [self reportScore:highscore forCategory:@"wiper"];
     
 }
 
@@ -1320,13 +1317,14 @@
                 if(shadowscore > 15000){
                     difficultyLevel++;
                     shadowscore=0;
+                }
                     NSString *tempDiff = 
-                    [[NSString alloc] initWithFormat:@"%d",difficultyLevel];
+                    [[NSString alloc] initWithFormat:@"%d Level %i",difficultyLevel,GameMode];
                     
                     [difficultyText setString:tempDiff];
                     [difficultyText draw];
                     
-                }
+                
                 
                 brick1 = nil;
                 board[x][y] = nil;
