@@ -18,9 +18,14 @@
 		<string>Default@2x.png</string>
 		<string>appicon_57x57.png</string>
 		<string>wiper_appicon_117x117.png</string>
-		<string>wiper_appicon_114x114.png</string>
-		<string>appicon-57.png</string>
+		<string>114-green.png</string>
+		<string>57-green.png</string>
 		<string>Default@2x.png</string>
+		<string>Default-Portrait@2x~ipad.png</string>
+		<string>Default-Portrait~ipad.png</string>
+		<string>Default-Landscape~ipad.png</string>
+		<string>Default-Landscape~ipad.png</string>
+		<string>Default-Landscape@2x~ipad.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -36,9 +41,14 @@
 				<string>Default@2x.png</string>
 				<string>appicon_57x57.png</string>
 				<string>wiper_appicon_117x117.png</string>
-				<string>wiper_appicon_114x114.png</string>
-				<string>appicon-57.png</string>
+				<string>114-green.png</string>
+				<string>57-green.png</string>
 				<string>Default@2x.png</string>
+				<string>Default-Portrait@2x~ipad.png</string>
+				<string>Default-Portrait~ipad.png</string>
+				<string>Default-Landscape~ipad.png</string>
+				<string>Default-Landscape~ipad.png</string>
+				<string>Default-Landscape@2x~ipad.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
