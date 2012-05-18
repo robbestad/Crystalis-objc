@@ -49,13 +49,13 @@ if( (self=[super init])) {
             break;
         
         case 4:
-            if(brickType<2) brickType++;
+            if(brickType<1) brickType++;
             break;
             
         default:
             break;
     }
-    if(brickType>5) brickType=random()%3;
+    if(brickType>5) brickType=(random()%2)+2;
     
     
     

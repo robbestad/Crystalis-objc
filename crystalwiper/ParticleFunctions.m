@@ -18,9 +18,9 @@
 	CCParticleSystem *emitter;
 	emitter = [[CCParticleFireworks alloc] init];
 	emitter.texture = [[CCTextureCache sharedTextureCache] addImage:@"dot.png"];
-    emitter.position = ccp(x+16,y);
-	emitter.duration = 0.1;
-    emitter.totalParticles=1;
+    emitter.position = ccp(x+32,y);
+	emitter.duration = 0.3;
+    emitter.totalParticles=2;
  	emitter.autoRemoveOnFinish = YES; // this removes/deallocs the emitter after its animation
 	[parentNode addChild:emitter z:500];
 }

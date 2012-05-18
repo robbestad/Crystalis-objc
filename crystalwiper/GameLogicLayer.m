@@ -117,7 +117,7 @@
 
 - (void) initMenu{
     CGSize s = [[CCDirector sharedDirector] winSize]; 
-    int menuOffset=20,menuPosition=s.height-menuOffset,menuXmultiplier=1,scoreXpos=204,multiplierX=190,bobleX=180,scorevalueXpos=274,fontsize=14,text1Xpos=100,text1YPos=55*menuXmultiplier,multiplierFont=12;
+    int menuOffset=20,menuPosition=s.height-menuOffset,menuXmultiplier=1,scoreXpos=194,multiplierX=190,bobleX=180,scorevalueXpos=274,fontsize=14,text1Xpos=100,text1YPos=55*menuXmultiplier,multiplierFont=12;
     BOOL showFaceAndBubble=YES;
     if([self isIpad]){
        menuXmultiplier=2; 
@@ -251,31 +251,31 @@
             break;
         case 2:
             // Level 2
-            reqCrystals=150;
+            reqCrystals=175;
             difficultyLevel=1;
             
             break;
         case 3:
             // Level 3
-            reqCrystals=100;
+            reqCrystals=150;
             difficultyLevel=1;
             
             break;
         case 4:
             // Level 4
-            reqCrystals=75;
+            reqCrystals=100;
             difficultyLevel=2;
             
             break;
         case 5:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=50;
+            reqCrystals=75;
             break;
         case 6:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=35;
+            reqCrystals=50;
             break;
         case 7:
             // Level 5
@@ -332,13 +332,14 @@
     NSString *yellow=NSLocalizedString(@"yellow", @"");
     NSString *ice=NSLocalizedString(@"ice", @"");
     
-    
+    NSString *txtSetnewhighscore=NSLocalizedString(@"Setnewhighscore", @"");
+
     
     remainingCrystals=0;
     switch(GameMode){
         case 0:
             //Maraton mode
-            txtGamemode=@"Sett en ny highscore!";
+            txtGamemode=txtSetnewhighscore;
             if(playersHighscore>0)
                 txtGamemode=[[NSString alloc] initWithFormat:@"%@ (%i %@) ",beatyourscore,playersHighscore,poeng];
             
@@ -1135,6 +1136,8 @@
     int x,y,m;
     foundThree=NO;
     for (int l=0;l<[sprites count];l++){
+        
+        
         if(!foundThree){
             Brick *brick3 = (Brick *)[self getChildByTag:l];
             x=brick3.boardX;
@@ -1220,6 +1223,16 @@
             brick.disappearing=YES;
         }
         */
+        
+        
+        //DEBUG
+        /*
+         for (int kk=0;kk<[tempGrouping count];kk++){
+            Brick *brick = [tempGrouping objectAtIndex:kk];
+            brick.opacity=90;
+        }
+        */
+        
         //CCLOG(@"FOund %i!",[tempGrouping count]);
         [tempGrouping removeAllObjects];
         
@@ -1405,13 +1418,13 @@
                 [sprites removeObject:brick1];
                 //CCLOG(@"removing brick %i %i",brick1.boardX,brick1.boardY);
                 [self removeChild:brick1 cleanup:YES];
-                score += (((difficultyLevel)*5)*(2+j));
-                shadowscore +=(((difficultyLevel)*5)*(2+j));
+                score += (((difficultyLevel)*8)*(2+j));
+                shadowscore +=(((difficultyLevel)*8)*(2+j));
                 //CCLOG(@"shadowscore: %i",shadowscore);
                 //CCLOG(@"difficulty: %i",difficultyLevel);
                 [FloatScore createExplosionX:remx y:remy localScore:(((difficultyLevel)*5)*(2+j)) inParent:self];
                 
-                if(shadowscore > 15000){
+                if(shadowscore > 30000){
                     difficultyLevel++;
                     shadowscore=0;
                 }
