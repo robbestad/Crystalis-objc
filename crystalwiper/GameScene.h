@@ -5,6 +5,7 @@
 
 CCSprite *background4, *background5;
 CCSprite *button1, *button2, *button3, *buttonleft, *buttonright, *buttoncenter;
+int winX,winY,brickSize,winXoffset;
 
 @class AppDelegate;
 

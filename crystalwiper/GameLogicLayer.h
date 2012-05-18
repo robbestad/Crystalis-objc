@@ -20,7 +20,7 @@
 	Brick  *brick1, *brick2;
     int GameMode, MaxLevels;
     int reqCrystals,allCrystals,redCrystals,greenCrystals,blueCrystals, yellowCrystals,purpleCrystals,iceCrystals;
-    BOOL levelWon, GameOver,playAudio,playSoundFX;
+    BOOL levelWon, GameOver,playAudio,playSoundFX,gameisPaused;
     
     int prevY;
 	int frameCount;

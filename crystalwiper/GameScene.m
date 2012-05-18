@@ -10,27 +10,45 @@
     self = [super init];
     if (self != nil) {
         isGameScene=YES;
-       
-        delegate= (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		delegate= (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         CCLayer *layer = [GameLogicLayer node];
 		[self addChild:layer z:1];
         
         background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
-        background5 = [CCSprite spriteWithFile:@"transparent.png"];
-        background5.position = ccp(160,272);
+        background4.position = ccp(s.width/2,s.height/2);
         
         
+        //IPHONE
         
-        //adding them to the main layer
-        [self addChild:background4 z:-2];
-        [self addChild:background5 z:-1];
-    
-        
+        CCLOG(@"model %@",[UIDevice currentDevice].model);
+        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+            CCLOG(@"Dette er en IPHONE!");
+            //winY=390;
+            winY=s.height*0.81;
+            winX=200;
+            brickSize=36;
+            winXoffset=20;
+            
+            background5 = [CCSprite spriteWithFile:@"transparent.png"];
+            background5.position = ccp(160,272);
+            //background5.position = ccp(s.width/2,s.height/1.8);
+            [self addChild:background4 z:-2];
+            [self addChild:background5 z:-1];
+        } else {
+            //IPAD
+            CCLOG(@"Dette er en IPAD!");
+            winY=s.height*0.76;
+            //winX=200;
+            brickSize=72;
+            winXoffset=-25;
+            [self addChild:background4 z:-2];
+            
+        }
+        CCLOG(@"winY:%i",winY);
         
          
-        CGSize s = [[CCDirector sharedDirector] winSizeInPixels]; 
         CCSprite *temp=[CCSprite spriteWithFile:@"blackpixel.png"];
         temp.position=ccp(s.width/2,s.height/2);
         [self addChild:temp z:50000];    //set as most top layer

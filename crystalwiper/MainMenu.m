@@ -25,6 +25,7 @@ enum {
 -(id) init
 {
 	if( (self=[super init])) {
+        
         NSString *fontname=@"American Typewriter";
         BOOL playAudio=YES;
         if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
@@ -54,8 +55,12 @@ enum {
         [self preloadSounds];
         
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
+        background4 = [CCSprite spriteWithFile:@"wiperclean.jpg"];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		background4.position = ccp(s.width/2,s.height/2);
+        
+        //background4.position = ccp(160,240);
+        
         [self addChild:background4 z:0];
         
         //HAVE ANIMATION START AND INIT AUDIO
@@ -204,7 +209,7 @@ enum {
         
         
 		// elastic effect
-		CGSize s = [[CCDirector sharedDirector] winSize];
+		//CGSize s = [[CCDirector sharedDirector] winSize];
 		int i=0;
 		for( CCNode *child in [menu children] ) {
 			CGPoint dstPoint = child.position;
@@ -342,8 +347,9 @@ enum {
     if( (self=[super init]) ) {
         NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
+        background4 = [CCSprite spriteWithFile:@"wiperclean.jpg"];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		background4.position = ccp(s.width/2,s.height/2);
         [self addChild:background4 z:0];
         
         
@@ -352,7 +358,7 @@ enum {
         NSString *txtOn=NSLocalizedString(@"On", @"");
         NSString *txtOff=NSLocalizedString(@"Off", @"");
         NSString *txtMusic=NSLocalizedString(@"Music", @"");
-        NSString *txtSound=NSLocalizedString(@"Lyd", @"");
+        NSString *txtSound=NSLocalizedString(@"Sound", @"");
         NSString *txtQuality=NSLocalizedString(@"Quality", @"");
         NSString *txtHigh=NSLocalizedString(@"High", @"");
         NSString *txtLow=NSLocalizedString(@"Low", @"");
@@ -463,8 +469,7 @@ enum {
          nil
          ];
         
-        CGSize s = [[CCDirector sharedDirector] winSize];
-		int i=0;
+  		int i=0;
 		for( CCNode *child in [menu children] ) {
 			CGPoint dstPoint = child.position;
 			int offset = s.width/2 + 50;
@@ -610,8 +615,9 @@ enum {
     if( (self=[super init]) ) {
         NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
+        background4 = [CCSprite spriteWithFile:@"wiperclean.jpg"];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		background4.position = ccp(s.width/2,s.height/2);
         [self addChild:background4 z:0];
         
         
@@ -637,7 +643,6 @@ enum {
        // menu1.position=ccp(150,100);
         
         
-		CGSize s = [[CCDirector sharedDirector] winSize];
 		[menu1 setPosition:ccp(s.width/2, s.height/2)];
         
         
@@ -655,11 +660,11 @@ enum {
     
         
         //DEbug
-        
+       /* 
          NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:0 forKey:@"kLevelsUnlocked"];
         [defaults synchronize];
-        
+        */
         //STOP
         
         
@@ -817,7 +822,9 @@ enum {
 			i++;
 		}
         
-        menu1.position=ccp(150,200);
+        //menu1.position=ccp(150,200);
+        menu1.position=ccp(s.width/2,s.height/2);
+        
         [self addChild:menu1 z:100];
         
         
@@ -1067,8 +1074,9 @@ enum {
         
         
         NSString *fontname=@"American Typewriter";
-        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
+        background4 = [CCSprite spriteWithFile:@"wiperclean.jpg"];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		background4.position = ccp(s.width/2,s.height/2);
         [self addChild:background4 z:0];
         
         
@@ -1211,7 +1219,6 @@ enum {
         
         
 		// elastic effect
-		CGSize s = [[CCDirector sharedDirector] winSize];
 		int i=0;
 		for( CCNode *child in [menu children] ) {
 			CGPoint dstPoint = child.position;
@@ -1257,18 +1264,23 @@ enum {
         */
         
         
-        
-        
+        int menuXmultiplier=1,fontsize=18;
+        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+            
+        } else {
+            menuXmultiplier=2; 
+            fontsize=26;
+        }
         
         
 		// Menu - back to main
         CCMenu *menu1 = [CCMenu node];
-        menu1.position=ccp(150,65);
+        menu1.position=ccp(s.width/2,65*menuXmultiplier);
         
 		NSString *txtBacktomain=NSLocalizedString(@"Returntomain", @"");
         
 		[CCMenuItemFont setFontName:fontname];
-		[CCMenuItemFont setFontSize:18];
+		[CCMenuItemFont setFontSize:fontsize];
 		CCMenuItemFont *mitem1 = [CCMenuItemFont itemWithString:txtBacktomain block:^(id sender) {
 			[[CCDirector sharedDirector] popScene];
 		}];
@@ -1363,51 +1375,65 @@ enum {
         
         NSString *fontname=@"American Typewriter";
         // BACKGROUND
-        background4 = [CCSprite spriteWithFile:@"wiper.jpg"];
-        background4.position = ccp(160,240);
+        background4 = [CCSprite spriteWithFile:@"wiperclean.jpg"];
+        CGSize s = [[CCDirector sharedDirector] winSize];
+		background4.position = ccp(s.width/2,s.height/2);
         [self addChild:background4 z:0];
        
         
         // Testing empty menu
 		CCMenu *menu1 = [CCMenu node];
-        menu1.position=ccp(150,100);
+        menu1.position=ccp(s.width/2,100);
         
 		
-		// Menu 1
+		int fontsize=18; 
         NSString *txtBacktomain=NSLocalizedString(@"Returntomain", @"");
+        NSString *text=NSLocalizedString(@"About1", @"");
+       
+        
+        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+            CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
+                               constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
+                                   lineBreakMode:UILineBreakModeWordWrap];
+            
+            CCLabelTTF *textLabel;
+            textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
+                                          fontName:fontname fontSize:16.0f];
+            
+            textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
+            textLabel.color=ccc3(0,0,0);
+            [self addChild: textLabel];
+            
+        } else {
+            CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:26.0f]
+                               constrainedToSize:CGSizeMake(self.contentSize.width-80, CGFLOAT_MAX)
+                                   lineBreakMode:UILineBreakModeWordWrap];
+            
+            fontsize=26;
+            CCLabelTTF *textLabel;
+            textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
+                                          fontName:fontname fontSize:26.0f];
+            
+            textLabel.position=ccp(s.width/2,s.height/2+75);
+            textLabel.color=ccc3(0,0,0);
+            [self addChild: textLabel];
+            
+        }
+        
         
 		[CCMenuItemFont setFontName:fontname];
-		[CCMenuItemFont setFontSize:18];
+		[CCMenuItemFont setFontSize:fontsize];
 		CCMenuItemFont *item1 = [CCMenuItemFont itemWithString:txtBacktomain block:^(id sender) {
 			//[[CCDirector sharedDirector] popScene];
             [[CCDirector sharedDirector] replaceScene:[MainMenu node]];
 		}];
         
         
-        NSString *text=@"Wiper er et spill der du skal forsøke å renske spillområdet for krystaller ved å peke på kombinasjoner med flere enn tre krystaller. Dess flere krystaller du klarer å kombinere, dess høyere blir din poengsum. Spillet er laget og publisert av Svenardo og er dedisert Ida Alana og Henry Alexander.";
-        
-        // self.contentSize.width is limiting the width of the label to this CCNode,
-        // in my case it's a new layer of a specific width and height and i don't
-        // want the text to go outside these demensions.
-        CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
-                           constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
-                               lineBreakMode:UILineBreakModeWordWrap];
-        
-        
-        CCLabelTTF *textLabel;
-        textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
-                                      fontName:fontname fontSize:16.0f];
-        CCLOG(@"textsize w%2.0f h%2.0f",textSize.width,textSize.height);
-        textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
-        //textLabel.position=ccpFromSize(textSize);
-        textLabel.color=ccc3(0,0,0);
-        [self addChild: textLabel];
         
 		
         item1.color=ccc3(0,0,0);
       
-        CGSize s = [[CCDirector sharedDirector] winSize];
-		int i=0;
+    	int i=0;
 		for( CCNode *child in [menu1 children] ) {
 			CGPoint dstPoint = child.position;
 			int offset = s.width/2 + 50;

@@ -30,6 +30,7 @@
 - (void) restartGame;
 - (void) nextChallenge;
 - (float) scale;
+- (BOOL) isIpad;
 - (void) retrieveHighScore;
 @end
 
@@ -107,93 +108,111 @@
 	
 }
 
+-(BOOL) isIpad{
+    if([[UIDevice currentDevice].model hasPrefix:@"iPhone"])
+        return NO;
+    else
+        return YES;
+}
+
 - (void) initMenu{
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    int menuOffset=20,menuPosition=s.height-menuOffset,menuXmultiplier=1,scoreXpos=204,multiplierX=190,bobleX=180,scorevalueXpos=274,fontsize=14,text1Xpos=100,text1YPos=55*menuXmultiplier,multiplierFont=12;
+    BOOL showFaceAndBubble=YES;
+    if([self isIpad]){
+       menuXmultiplier=2; 
+        scoreXpos=295;
+        multiplierX=190;
+        scorevalueXpos=345;
+        fontsize=18;
+        bobleX=190;
+        showFaceAndBubble=NO;
+        text1Xpos=415;
+        text1YPos=100;
+        multiplierFont=20;
+    }
     
-    NSString *txtMultiplier=NSLocalizedString(@"txtMultiplier", @"");
-    NSString *gname=NSLocalizedString(@"Menu", @"");
+   
+    
     NSString *fontname=@"American Typewriter";
-    logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
-    logotext.position = ccp(55,460);
-    logotext.color=ccc3(0,0,0); 
-    [self addChild:logotext z:30];
-    logotext = [CCLabelTTF labelWithString:gname fontName:fontname fontSize:24];
-    logotext.position = ccp(54,461);
-    logotext.color=ccc3(255,255,255); 
-    [self addChild:logotext z:31];
+    //NSString *txtMultiplier=NSLocalizedString(@"txtMultiplier", @"");
+    NSString *gname=NSLocalizedString(@"Menu", @"");
     
-    NSString *txtDifficultyLevel;
-    txtDifficultyLevel=[[NSString alloc] initWithFormat:@"%i",difficultyLevel];
     
-    /*difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:24];
-     difficultyText.position = ccp(149,461);
-     difficultyText.color=ccc3(255,255,255); 
-     [self addChild:difficultyText z:30];
-     */
-    difficultyText = [CCLabelTTF labelWithString:txtDifficultyLevel fontName:fontname fontSize:12];
+    //MENU
+    CCMenu *menutop = [CCMenu node];
+    menutop.position=ccp(55*menuXmultiplier,menuPosition);
+    
+    
+    [CCMenuItemFont setFontName:fontname];
+    [CCMenuItemFont setFontSize:24];
+    CCMenuItemFont *mitem1 = [CCMenuItemFont itemWithString:gname block:^(id sender) {
+        if(!gameisPaused) [self pauseGame]; 
+    }];
+    mitem1.color=ccc3(255,255,255);
+    [menutop addChild:mitem1];
+    [self addChild:menutop z:500];
+
+    
+    
+    //NSString *txtDifficultyLevel;
+    //txtDifficultyLevel=[[NSString alloc] initWithFormat:@"%i",difficultyLevel];
+ 
+    difficultyText = [CCLabelTTF labelWithString:@" " fontName:fontname fontSize:multiplierFont];
     //difficultyText.position = ccp(200,55);
-    difficultyText.position = ccp(250,55);
+    difficultyText.position = ccp(text1Xpos+80,text1YPos);
     difficultyText.color=ccc3(0,0,0); 
     [self addChild:difficultyText z:30];
     
     
     NSString *scorel=NSLocalizedString(@"Score", @"");
     scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
-    scoreLabel.position =  ccp( 204, 461 );
+    scoreLabel.position =  ccp( scoreXpos*menuXmultiplier, menuPosition );
     scoreLabel.color=ccc3(0,0,0); 
-    [self addChild:scoreLabel z:30];
+    [self addChild:scoreLabel z:530];
     scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
-    scoreLabel.position =  ccp( 205, 461 );
+    scoreLabel.position =  ccp( (scoreXpos*menuXmultiplier)+1, menuPosition+1 );
     scoreLabel.color=ccc3(255,255,255); 
-    [self addChild:scoreLabel z:31];
+    [self addChild:scoreLabel z:531];
     
     scoreValueShadow = [CCLabelTTF labelWithString:@"  0" fontName:fontname fontSize:22];
-    scoreValueShadow.position =  ccp( 274, 460 );
+    scoreValueShadow.position =  ccp( scorevalueXpos*menuXmultiplier, menuPosition );
     scoreValueShadow.color=ccc3(0,0,0); 
     [self addChild:scoreValueShadow z:30];
     scoreValue = [CCLabelTTF labelWithString:@"  0" fontName:fontname fontSize:22];
-    scoreValue.position =  ccp( 275, 461 );
+    scoreValue.position =  ccp( (scorevalueXpos*menuXmultiplier)+1, menuPosition+1 );
     scoreValue.color=ccc3(255,255,255); 
     [self addChild:scoreValue z:31];
+   
     
     
     
-    //BOBLETEKST
-    bobletext = [CCLabelTTF labelWithString:@"WIPER" fontName:fontname fontSize:14];
-    bobletext.position = ccp(190,70);
+    //MULTIPLIERTEXT
+    bobletext = [CCLabelTTF labelWithString:@"" fontName:fontname fontSize:multiplierFont];
+    bobletext.position = ccp(183*menuXmultiplier,76*menuXmultiplier);
     bobletext.color=ccc3(0,0,0); 
     [self addChild:bobletext z:30];
     
-    Multiplier = [CCLabelTTF labelWithString:txtMultiplier fontName:fontname fontSize:12];
-    Multiplier.position = ccp(165,55);
+    Multiplier = [CCLabelTTF labelWithString:@"" fontName:fontname fontSize:multiplierFont];
+    Multiplier.position = ccp(text1Xpos,text1YPos);
     Multiplier.color=ccc3(0,0,0); 
     [self addChild:Multiplier z:30];
     
-    
-    
+    if(showFaceAndBubble){
+        
     // BACKGROUND
     CCSprite *face;
     face = [CCSprite spriteWithFile:@"face.png"];
-    face.position = ccp(35,60);
+    face.position = ccp(35*menuXmultiplier,60*menuXmultiplier);
     [self addChild:face z:0];
     
     CCSprite *boble;
     boble = [CCSprite spriteWithFile:@"boble.png"];
-    boble.position = ccp(180,60);
+    boble.position = ccp(bobleX*menuXmultiplier,60*menuXmultiplier);
     boble.opacity=180;
     [self addChild:boble z:0];
+    }
     
-    
-    
-    /*
-     tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
-     tbutton2.position = ccp(158,68);
-     tbutton2.color=ccc3(255,255,255);
-     [self addChild:tbutton2 z:30];
-     tbutton2 = [CCLabelTTF labelWithString:NSLocalizedString(@"Restart", @"") fontName:@"LCD" fontSize:22];
-     tbutton2.position = ccp(157,67);
-     tbutton2.color=ccc3(0,0,0);
-     [self addChild:tbutton2 z:30];
-     */
     // clear the board
 	memset(board, 0, sizeof(board));
 	
@@ -225,20 +244,20 @@
             
         case 1:
             // Level 1
-            reqCrystals=200;
+            reqCrystals=250;
             difficultyLevel=1;
             
             
             break;
         case 2:
             // Level 2
-            reqCrystals=100;
+            reqCrystals=150;
             difficultyLevel=1;
             
             break;
         case 3:
             // Level 3
-            reqCrystals=75;
+            reqCrystals=100;
             difficultyLevel=1;
             
             break;
@@ -251,17 +270,17 @@
         case 5:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=75;
+            reqCrystals=50;
             break;
         case 6:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=75;
+            reqCrystals=35;
             break;
         case 7:
             // Level 5
             difficultyLevel=4;
-            reqCrystals=75;
+            reqCrystals=25;
             break;
         case 8:
             // FINAL LEVEL
@@ -272,11 +291,18 @@
             
     }
     //DEBUG
-    reqCrystals=50; 
+    //reqCrystals=1; 
     //STOP
 }
 
 -(void) checkWinStatus{
+    int menuXYmultiplier=1,text1Xpos=190,text1YPos=69*menuXYmultiplier,fontsize=12;
+    if([self isIpad]){
+        menuXYmultiplier=2;
+        text1Xpos=500;
+        text1YPos=150;
+        fontsize=18;
+    }
     levelWon=NO;
     if(GameMode>8)GameMode=8;
     CCLOG(@"gamemode %i",GameMode);
@@ -399,8 +425,8 @@
     NSString *nytempStr = 
     [[NSString alloc] initWithFormat:@"%@: %@",goal,txtGamemode];
     
-    bobletext.position=ccp(190,69);
-    bobletext.fontSize=12;
+    bobletext.position=ccp(text1Xpos,text1YPos);
+    bobletext.fontSize=fontsize;
     [bobletext setString:nytempStr];
     [bobletext draw];
     
@@ -416,7 +442,8 @@
 
 
 - (void) startGame {
-    self.isTouchEnabled = YES;     
+    self.isTouchEnabled = YES;  
+    gameisPaused=NO;
     //CHECK GAMEMODE
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] != nil) { 
         GameMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayLastMode"] intValue];
@@ -427,7 +454,7 @@
      1 > 10 = Challenge modes
      
      */
-    
+
     [self resetScores];
     MaxLevels=8;
     GameModeChanged=NO;
@@ -446,9 +473,26 @@
     if(rand1<1) rand1=1; 
     
     rand2=rand1+1;
+    CGSize s = [[CCDirector sharedDirector] winSize];
+
+    if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+        winY=s.height*0.81;
+        winX=200;
+        brickSize=36;
+        winXoffset=20;
+    } else {
+        winY=s.height*0.76;
+        //winX=200;
+        brickSize=72;
+        winXoffset=-25;
+    }
+
+    
     [self initMenu];
     [self fillTable];
-	// Execute updateBoard 60 times per second.
+    [self checkWinStatus];
+   
+    // Execute updateBoard 60 times per second.
 	[self schedule:@selector(updateBoard:) interval: 1.0 / 60.0];
 }
 
@@ -500,7 +544,8 @@
                 brick1 = [Brick newBrick:difficultyLevel];
                 board[x][y] = brick1;
                 brick1.boardX = x; brick1.boardY = y;
-                brick1.position = COMPUTE_X_Y(x,y);
+                brick1.position = COMPUTE_X_Y(x,y,winY,winXoffset,brickSize);
+                CCLOG(@"brickposition %i",brick1.position);
                 //CCLOG(@"tag %i",tagtab);
                 brick1.tag=tagtab;
                 [self addChild:brick1 z:2];
@@ -521,7 +566,7 @@
         board[x][0] = brick1;
         brick1.tag=tagtab;
         brick1.boardX = x; brick1.boardY = 0;
-        brick1.position = COMPUTE_X_Y(x,0);
+        brick1.position = COMPUTE_X_Y(x,0,winY,winXoffset,brickSize);
         [self addChild:brick1 z:5];
         tagtab++;
 	}
@@ -536,7 +581,7 @@
         board[x][0] = brick1;
         brick1.tag=tagtab;
         brick1.boardX = x; brick1.boardY = 0;
-        brick1.position = COMPUTE_X_Y(x,0);
+        brick1.position = COMPUTE_X_Y(x,0,winY,winXoffset,brickSize);
         [self addChild:brick1 z:5];
         tagtab++;
 	}
@@ -552,7 +597,7 @@
             board[x][0] = brick1;
             brick1.tag=tagtab;
             brick1.boardX = x; brick1.boardY = 0;
-            brick1.position = COMPUTE_X_Y(x,0);
+            brick1.position = COMPUTE_X_Y(x,0,winY,winXoffset,brickSize);
             [self addChild:brick1 z:5];
             tagtab++;
         }
@@ -579,6 +624,7 @@
     
 }
 - (void) fortsettSpill{
+    gameisPaused=NO;
     [self blankWindow];
     [self removeChildByTag:100991 cleanup:YES];
     [self removeChildByTag:100993 cleanup:YES];
@@ -619,6 +665,7 @@
 
 
 - (void) restartGame {
+    gameisPaused=NO;
     //[[CCDirector sharedDirector] stopAnimation];
     /*
     if(GameMode!=0 && GameModeChanged){
@@ -647,7 +694,7 @@
     shakes=0;
     shadowscore=0;
    
-    [self fillTable];
+    //[self fillTable];
     [self schedule:@selector(updateBoard:) interval: 1.0 / 60.0];
     self.isTouchEnabled = YES;
     
@@ -688,29 +735,44 @@
     self.isTouchEnabled = NO;
     [self unschedule: @selector(updateBoard:)];
 
-    [self dimScreen]; 
-    //self.isTouchEnabled = NO;
-    //[self unschedule: @selector(updateBoard:)];
+    [self dimScreen];
+    gameisPaused=YES;
+    
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    int menuXYmultiplier=1,fontsize=13,xPos=s.width/2-10,svenardoXpos=180,feedbackXpos=160,menuXpos=s.width/2-10,menuYpos=290*menuXYmultiplier,pauseYpos=340*menuXYmultiplier,pauseFontsize=18;
+    if([self isIpad]){
+        CCLOG(@"IS IPAD!iph-y %i y%i",290*menuXYmultiplier,menuYpos);
+        menuXYmultiplier=2;
+        fontsize=24;
+        pauseFontsize=30;
+        xPos=s.width/2;
+        svenardoXpos=s.width/2+100;
+        feedbackXpos=s.width/2;
+        menuXpos=s.width/2;
+        menuYpos=s.height/2+100;
+        pauseYpos=360*menuXYmultiplier;
+    }
+    
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
     feedback = [CCSprite spriteWithFile:@"feedback.png"];
-    feedback.position = ccp(160,240);
+    feedback.position = ccp(feedbackXpos,240*menuXYmultiplier);
     feedback.tag=100995;
     feedback.opacity=230;
     [self addChild:feedback z:90];
     
     CCSprite *svenardo;
     svenardo = [CCSprite spriteWithFile:@"svenardo1.png"];
-    svenardo.position = ccp(180,180);
+    svenardo.position = ccp(svenardoXpos,180*menuXYmultiplier);
     svenardo.tag=100992;
     [self addChild:svenardo z:90];
     
     
     
-    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    
     
     NSString *text=NSLocalizedString(@"txtPause", @"");
-    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:18.0f]
+    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:pauseFontsize]
                        constrainedToSize:CGSizeMake(self.contentSize.width-100, CGFLOAT_MAX)
                            lineBreakMode:UILineBreakModeWordWrap];
     
@@ -721,7 +783,7 @@
     textLabel.tag=100993;
     // CGSize s = [[CCDirector sharedDirector] winSize]; 
     //textLabel.position=ccp(s.width/2,s.height/2);
-    textLabel.position=ccp(s.width/2,340);
+    textLabel.position=ccp(s.width/2,pauseYpos);
     
     [self addChild: textLabel z:100];
     
@@ -730,19 +792,20 @@
     NSString *txtContinue=NSLocalizedString(@"txtUCContinue", @"");
     NSString *txtRestartGame=NSLocalizedString(@"Restart", @"");
     
-    NSString *txtMenu=NSLocalizedString(@"Menu", @"");
+    NSString *txtMenu=NSLocalizedString(@"Main", @"");
     
     NSString *fontname=@"LCD";
     
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
+    
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtContinue fontName:fontname fontSize:12];
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtContinue fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(fortsettSpill)];
     item3.color=ccc3(222,161,87);
     
@@ -752,14 +815,14 @@
     CCMenu *menu = [CCMenu menuWithItems:
                     item1, item2, item3,
                     
-                    nil]; // 7 items.
+                    nil]; // 3 items.
     [menu alignItemsInColumns:
      [NSNumber numberWithUnsignedInt:3],
      nil
      ]; 
     
     [self addChild: menu z:10099 tag:100996];
-    [menu setPosition:ccp(s.width/2-10,290)];
+    [menu setPosition:ccp(menuXpos,menuYpos)];
     
         
 }
@@ -771,8 +834,28 @@
 
     [self lagreHighscore];
     
-    [self dimScreen]; 
+    gameisPaused=YES;
     
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    int menuXYmultiplier=1,fontsize=13,xPos=s.width/2-10,svenardoXpos=180,feedbackXpos=160,menuXpos=s.width/2-10,menuYpos=290*menuXYmultiplier,pauseYpos=340*menuXYmultiplier,pauseFontsize=18,xPadding=100;
+    if([self isIpad]){
+        CCLOG(@"IS IPAD!iph-y %i y%i",290*menuXYmultiplier,menuYpos);
+        menuXYmultiplier=2;
+        fontsize=24;
+        pauseFontsize=30;
+        xPos=s.width/2;
+        svenardoXpos=s.width/2+100;
+        feedbackXpos=s.width/2;
+        menuXpos=s.width/2;
+        menuYpos=s.height/2+100;
+        pauseYpos=360*menuXYmultiplier;
+        
+        xPadding=180;
+    }
+
+    
+    [self dimScreen]; 
+   
     //SETT NESTE LEVEL UNLOCKED
     
     int levelsUnlocked=0;
@@ -799,34 +882,34 @@
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
     feedback = [CCSprite spriteWithFile:@"feedback.png"];
-    feedback.position = ccp(160,240);
-    feedback.tag=100992;
+    feedback.position = ccp(feedbackXpos,240*menuXYmultiplier);
+    feedback.tag=100995;
     feedback.opacity=230;
     [self addChild:feedback z:90];
     
     CCSprite *svenardo;
     svenardo = [CCSprite spriteWithFile:@"svenardo1.png"];
-    svenardo.position = ccp(180,180);
+    svenardo.position = ccp(svenardoXpos,180*menuXYmultiplier);
     svenardo.tag=100992;
     [self addChild:svenardo z:90];
     
     
     
-    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    
     
     NSString *text=NSLocalizedString(@"txtleveldone1", @"");
-    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:18.0f]
-                       constrainedToSize:CGSizeMake(self.contentSize.width-100, CGFLOAT_MAX)
+    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:pauseFontsize]
+                       constrainedToSize:CGSizeMake(self.contentSize.width-xPadding, CGFLOAT_MAX)
                            lineBreakMode:UILineBreakModeWordWrap];
     
     
     CCLabelTTF *textLabel;
-    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:18.0f];
+    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:pauseFontsize];
     textLabel.color=ccc3(222,161,87);
     textLabel.tag=100993;
     // CGSize s = [[CCDirector sharedDirector] winSize]; 
     //textLabel.position=ccp(s.width/2,s.height/2);
-    textLabel.position=ccp(s.width/2,340);
+    textLabel.position=ccp(s.width/2,pauseYpos);
     
     [self addChild: textLabel z:100];
     
@@ -837,16 +920,16 @@
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     
     NSString *fontname=@"LCD";
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
     
-    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:fontname fontSize:12];
+    CCLabelTTF *lblText3 = [CCLabelTTF labelWithString:txtNextLevel fontName:fontname fontSize:fontsize ];
     CCMenuItemLabel *item3 = [CCMenuItemLabel itemWithLabel:lblText3 target:self selector:@selector(nextChallenge)];
     item3.color=ccc3(222,161,87);
     
@@ -861,7 +944,7 @@
      ]; 
     
     [self addChild: menu z:10099];
-    [menu setPosition:ccp(s.width/2,290)];
+    [menu setPosition:ccp(s.width/2,290*menuXYmultiplier)];
     //[self unschedule: @selector(updateBoard:)];
     
     
@@ -948,37 +1031,51 @@
     [self lagreHighscore];
     [self dimScreen];
     
+    
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    int menuXYmultiplier=1,fontsize=13,xPos=s.width/2-10,svenardoXpos=180,feedbackXpos=160,menuXpos=s.width/2-10,menuYpos=290*menuXYmultiplier,pauseYpos=340*menuXYmultiplier,pauseFontsize=18,xPadding=100;
+    if([self isIpad]){
+        CCLOG(@"IS IPAD!iph-y %i y%i",290*menuXYmultiplier,menuYpos);
+        menuXYmultiplier=2;
+        fontsize=24;
+        pauseFontsize=30;
+        xPos=s.width/2;
+        svenardoXpos=s.width/2+100;
+        feedbackXpos=s.width/2;
+        menuXpos=s.width/2;
+        menuYpos=s.height/2+100;
+        pauseYpos=360*menuXYmultiplier;
+        xPadding=180;
+    }
+    
     // SVENARDO + FEEDBACKBOKS
     CCSprite *feedback;
     feedback = [CCSprite spriteWithFile:@"feedback.png"];
-    feedback.position = ccp(160,240);
-    feedback.tag=100992;
+    feedback.position = ccp(feedbackXpos,240*menuXYmultiplier);
+    feedback.tag=100995;
     feedback.opacity=230;
     [self addChild:feedback z:90];
     
     CCSprite *svenardo;
     svenardo = [CCSprite spriteWithFile:@"svenardo2.png"];
-    svenardo.position = ccp(180,180);
+    svenardo.position = ccp(svenardoXpos,180*menuXYmultiplier);
     svenardo.tag=100992;
     [self addChild:svenardo z:90];
     
-    
-    CGSize s = [[CCDirector sharedDirector] winSize]; 
-    
     NSString *text=NSLocalizedString(@"txtgameover", @"");
     
-    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:18.0f]
-                       constrainedToSize:CGSizeMake(self.contentSize.width-100, CGFLOAT_MAX)
+    CGSize textSize = [text sizeWithFont:[UIFont fontWithName:@"American Typewriter" size:pauseFontsize]
+                       constrainedToSize:CGSizeMake(self.contentSize.width-xPadding, CGFLOAT_MAX)
                            lineBreakMode:UILineBreakModeWordWrap];
     
     
     CCLabelTTF *textLabel;
-    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:18.0f];
+    textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentLeft fontName:@"American Typewriter" fontSize:pauseFontsize];
     textLabel.color=ccc3(222,161,87);
     textLabel.tag=100993;
     // CGSize s = [[CCDirector sharedDirector] winSize]; 
     //textLabel.position=ccp(s.width/2,s.height/2);
-    textLabel.position=ccp(s.width/2,340);
+    textLabel.position=ccp(s.width/2,pauseYpos);
     
     [self addChild: textLabel z:100];
     
@@ -986,11 +1083,11 @@
     NSString *txtMenu=NSLocalizedString(@"Menu", @"");
     NSString *fontname=@"LCD";
     
-    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:12];
+    CCLabelTTF *lblText1 = [CCLabelTTF labelWithString:txtMenu fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item1 = [CCMenuItemLabel itemWithLabel:lblText1 target:self selector:@selector(showMenu)];
     item1.color=ccc3(222,161,87);
     
-    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:12];
+    CCLabelTTF *lblText2 = [CCLabelTTF labelWithString:txtRestartGame fontName:fontname fontSize:fontsize];
     CCMenuItemLabel *item2 = [CCMenuItemLabel itemWithLabel:lblText2 target:self selector:@selector(restartGame)];
     item2.color=ccc3(222,161,87);
     
@@ -1004,7 +1101,7 @@
      ]; 
     
     [self addChild: menu z:10099];
-    [menu setPosition:ccp(s.width/2,290)];
+    [menu setPosition:ccp(s.width/2,menuYpos)];
     
 }
 
@@ -1023,8 +1120,7 @@
                 if (![[SimpleAudioEngine sharedEngine] isBackgroundMusicPlaying])
                     [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"funny_loop.mp3" loop:YES];
             }
-            
-        
+                   
         }
     }
 }
@@ -1146,7 +1242,9 @@
     
     
     CGSize s = [[CCDirector sharedDirector] winSize]; 
-    point.y = 480 - point.y;
+    //point.y = 480 - point.y;
+    point.y = s.height - point.y;
+    
     locationX = s.height - point.y;
 	locationY = s.width - point.x;
     BOOL keepchecking;
@@ -1159,19 +1257,18 @@
      //CCLOG(@"restart");
      [self restartGame];
      } 
-     */
     if((int)point.y>450 && (int)point.y<=480
        && (int)point.x>0 && (int)point.x <= 90){
         [self pauseGame];        
     } 
-    //CCLOG(@"x%i y%i",(int)point.x,(int)point.y);
-    
+    CCLOG(@"x%i y%i",(int)point.x,(int)point.y);
+    */
     for (int l=0;l<[sprites count];l++){
         
         Brick *brick3 = (Brick *)[self getChildByTag:l];
         
         if (CGRectContainsPoint([brick3 boundingBox], point)){
-            //CCLOG(@"touched brick type: %i %i - disapp: %i",brick.boardX,brick.boardY,brick.disappearing);
+            CCLOG(@"touched brick type: %i %i - disapp: %i",brick3.boardX,brick3.boardY,brick3.disappearing);
             x=brick3.boardX;
             y=brick3.boardY;
             m=0;
@@ -1318,8 +1415,10 @@
                     difficultyLevel++;
                     shadowscore=0;
                 }
+                    NSString *txtMultiplier=NSLocalizedString(@"txtMultiplier", @"");
+                
                     NSString *tempDiff = 
-                    [[NSString alloc] initWithFormat:@"%d Level %i",difficultyLevel,GameMode];
+                    [[NSString alloc] initWithFormat:@"%@ %d",txtMultiplier,difficultyLevel];
                     
                     [difficultyText setString:tempDiff];
                     [difficultyText draw];

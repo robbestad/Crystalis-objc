@@ -87,7 +87,9 @@
 	struct timeval tv;
 	gettimeofday( &tv, 0 );
 	srandom( tv.tv_usec + tv.tv_sec );
-    
+    //GAMECENTER
+    [[GameCenter sharedInstance] authenticateLocalUser];
+
     
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
@@ -112,9 +114,8 @@
     [director_ pushScene: [MainMenu node]]; 
 
     
-    //GAMECENTER
-    [[GameCenter sharedInstance] authenticateLocalUser];
-
+    
+ 
 	return YES;
 }
 

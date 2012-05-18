@@ -17,6 +17,16 @@
 @synthesize boardY;
 @synthesize disappearing;
 
+-(id) init
+{
+if( (self=[super init])) {
+//CGSize s = [[CCDirector sharedDirector] winSize];
+
+
+}
+    return self;
+}
+
 + (Brick *) newBrick:(int)difficultyLevel {
     
 	NSString *filename = nil, *color = nil;
@@ -77,7 +87,8 @@
 }
 
 - (void) redrawPositionOnBoard {
-    [self setPosition: COMPUTE_X_Y(boardX, boardY)];
+    
+    [self setPosition: COMPUTE_X_Y(boardX, boardY,winY,winXoffset,brickSize)];
 }
 
 
