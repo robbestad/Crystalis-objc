@@ -197,12 +197,13 @@
 		8FB6E05B156570CF00BD074E /* wiperclean-ipad.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E057156570CF00BD074E /* wiperclean-ipad.jpg */; };
 		8FB6E05C156570CF00BD074E /* wiperclean-ipadhd.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E058156570CF00BD074E /* wiperclean-ipadhd.jpg */; };
 		8FB6E05D156570CF00BD074E /* wiperclean.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E059156570CF00BD074E /* wiperclean.jpg */; };
-		8FB6E05F15657B1700BD074E /* 57-green.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E05E15657B1700BD074E /* 57-green.png */; };
+		8FB6E05F15657B1700BD074E /* appicon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E05E15657B1700BD074E /* appicon_57x57.png */; };
 		8FB6E06115657B5700BD074E /* 114-green.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E06015657B5700BD074E /* 114-green.png */; };
 		8FB6E0631566148600BD074E /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E0621566148600BD074E /* Default-Portrait@2x~ipad.png */; };
 		8FB6E065156614B000BD074E /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E064156614B000BD074E /* Default-Portrait~ipad.png */; };
 		8FB6E067156614C700BD074E /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E066156614C700BD074E /* Default-Landscape~ipad.png */; };
 		8FB6E0691566152800BD074E /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E0681566152800BD074E /* Default-Landscape@2x~ipad.png */; };
+		8FB6E06B156639B200BD074E /* wiper_appicon_117x117.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB6E06A156639B100BD074E /* wiper_appicon_117x117.png */; };
 		8FBD2E3115612DC600AC6EFB /* wiper.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FBD2E2F15612DC600AC6EFB /* wiper.jpg */; };
 		8FBD328F1563822100AC6EFB /* transparent-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FBD328E1563822100AC6EFB /* transparent-ipad.png */; };
 		8FBD32911563827C00AC6EFB /* transparent-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FBD32901563827C00AC6EFB /* transparent-ipadhd.png */; };
@@ -563,12 +564,13 @@
 		8FB6E057156570CF00BD074E /* wiperclean-ipad.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "wiperclean-ipad.jpg"; sourceTree = SOURCE_ROOT; };
 		8FB6E058156570CF00BD074E /* wiperclean-ipadhd.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "wiperclean-ipadhd.jpg"; sourceTree = SOURCE_ROOT; };
 		8FB6E059156570CF00BD074E /* wiperclean.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wiperclean.jpg; sourceTree = SOURCE_ROOT; };
-		8FB6E05E15657B1700BD074E /* 57-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "57-green.png"; sourceTree = "<group>"; };
+		8FB6E05E15657B1700BD074E /* appicon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon_57x57.png; sourceTree = "<group>"; };
 		8FB6E06015657B5700BD074E /* 114-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "114-green.png"; sourceTree = "<group>"; };
 		8FB6E0621566148600BD074E /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		8FB6E064156614B000BD074E /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		8FB6E066156614C700BD074E /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		8FB6E0681566152800BD074E /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		8FB6E06A156639B100BD074E /* wiper_appicon_117x117.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wiper_appicon_117x117.png; path = crystalwiper/Resources/wiper_appicon_117x117.png; sourceTree = "<group>"; };
 		8FBD2E2F15612DC600AC6EFB /* wiper.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wiper.jpg; sourceTree = "<group>"; };
 		8FBD328E1563822100AC6EFB /* transparent-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transparent-ipad.png"; sourceTree = "<group>"; };
 		8FBD32901563827C00AC6EFB /* transparent-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transparent-ipadhd.png"; sourceTree = "<group>"; };
@@ -622,8 +624,9 @@
 				8FB6E066156614C700BD074E /* Default-Landscape~ipad.png */,
 				8FB6E064156614B000BD074E /* Default-Portrait~ipad.png */,
 				8FB6E0621566148600BD074E /* Default-Portrait@2x~ipad.png */,
+				8FB6E06A156639B100BD074E /* wiper_appicon_117x117.png */,
 				8FB6E06015657B5700BD074E /* 114-green.png */,
-				8FB6E05E15657B1700BD074E /* 57-green.png */,
+				8FB6E05E15657B1700BD074E /* appicon_57x57.png */,
 				8F9E471A155B9405007397E9 /* CCUIViewWrapper.h */,
 				8F9E471B155B9406007397E9 /* CCUIViewWrapper.m */,
 				8F86C5E815595A5F0001B3B9 /* crystalwiper */,
@@ -1324,12 +1327,13 @@
 				8FB6E05B156570CF00BD074E /* wiperclean-ipad.jpg in Resources */,
 				8FB6E05C156570CF00BD074E /* wiperclean-ipadhd.jpg in Resources */,
 				8FB6E05D156570CF00BD074E /* wiperclean.jpg in Resources */,
-				8FB6E05F15657B1700BD074E /* 57-green.png in Resources */,
+				8FB6E05F15657B1700BD074E /* appicon_57x57.png in Resources */,
 				8FB6E06115657B5700BD074E /* 114-green.png in Resources */,
 				8FB6E0631566148600BD074E /* Default-Portrait@2x~ipad.png in Resources */,
 				8FB6E065156614B000BD074E /* Default-Portrait~ipad.png in Resources */,
 				8FB6E067156614C700BD074E /* Default-Landscape~ipad.png in Resources */,
 				8FB6E0691566152800BD074E /* Default-Landscape@2x~ipad.png in Resources */,
+				8FB6E06B156639B200BD074E /* wiper_appicon_117x117.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
