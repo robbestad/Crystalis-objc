@@ -16,20 +16,32 @@
 	CCLabelTTF *scoreText;
     NSString *temp = 
     [[NSString alloc] initWithFormat:@"%d",localScore];
+    CGSize s = [[CCDirector sharedDirector] winSize]; 
+    int menuOffset=20,menuPosition=s.height-(menuOffset-1);
+    int menuXmultiplier=1,fontsize=14,scorevalueXpos=275;
+if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+        
+    } else {
+        menuPosition=s.height-(menuOffset-1);
+        menuXmultiplier=2; 
+        fontsize=20;
+        scorevalueXpos=340;
+    }
     
-    scoreText = [CCLabelTTF labelWithString:temp fontName:@"LCD" fontSize:14];
+    
+    scoreText = [CCLabelTTF labelWithString:temp fontName:@"American Typewriter" fontSize:fontsize];
     //int localTag=random()%10000;
     scoreText.position = ccp(x+20,y+20);
     //scoreText.tag=localTag;
     scoreText.color=ccc3(119,119,119); 
-    [parentNode addChild:scoreText z:200  ];
+    [parentNode addChild:scoreText z:50  ];
     /*
      CCAction * action =  [CCSequence actions:[CCFadeTo actionWithDuration:1.0f opacity:0], 
                          [CCCallFuncN actionWithTarget:self selector:@selector(removeText:)], nil];
     [scoreText runAction:action];
     */
     CCAction * action =  [CCSequence actions:
-                         [CCMoveTo actionWithDuration:1.0f position:ccp(275, 459)],
+                         [CCMoveTo actionWithDuration:1.5f position:ccp(scorevalueXpos*menuXmultiplier, menuPosition)],
                           [CCFadeTo actionWithDuration:0.5f opacity:0],
                           [CCCallFuncND actionWithTarget:parentNode selector:@selector(removeText:) data:(void*)YES],
                          nil];
