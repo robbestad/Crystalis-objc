@@ -1265,11 +1265,11 @@ enum {
         
         
         int menuXmultiplier=1,fontsize=18;
-        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
-            
-        } else {
+        if([[UIDevice currentDevice].model hasPrefix:@"iPad"]){
             menuXmultiplier=2; 
             fontsize=26;
+            
+        } else {
         }
         
         
@@ -1391,20 +1391,7 @@ enum {
         NSString *text=NSLocalizedString(@"About1", @"");
        
         
-        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
-            CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
-                               constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
-                                   lineBreakMode:UILineBreakModeWordWrap];
-            
-            CCLabelTTF *textLabel;
-            textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
-                                          fontName:fontname fontSize:16.0f];
-            
-            textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
-            textLabel.color=ccc3(0,0,0);
-            [self addChild: textLabel];
-            
-        } else {
+        if([[UIDevice currentDevice].model hasPrefix:@"iPad"]){
             CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:26.0f]
                                constrainedToSize:CGSizeMake(self.contentSize.width-80, CGFLOAT_MAX)
                                    lineBreakMode:UILineBreakModeWordWrap];
@@ -1415,6 +1402,21 @@ enum {
                                           fontName:fontname fontSize:26.0f];
             
             textLabel.position=ccp(s.width/2,s.height/2+75);
+            textLabel.color=ccc3(0,0,0);
+            [self addChild: textLabel];
+            
+            
+        } else {
+            
+            CGSize textSize = [text sizeWithFont:[UIFont fontWithName:fontname size:16.0f]
+                               constrainedToSize:CGSizeMake(self.contentSize.width-40, CGFLOAT_MAX)
+                                   lineBreakMode:UILineBreakModeWordWrap];
+            
+            CCLabelTTF *textLabel;
+            textLabel= [CCLabelTTF labelWithString:text dimensions:textSize hAlignment:UITextAlignmentCenter 
+                                          fontName:fontname fontSize:16.0f];
+            
+            textLabel.position=ccp((textSize.width/2)+20,textSize.height+75);
             textLabel.color=ccc3(0,0,0);
             [self addChild: textLabel];
             

@@ -23,8 +23,18 @@
         //IPHONE
         
         CCLOG(@"model %@",[UIDevice currentDevice].model);
-        if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
-            CCLOG(@"Dette er en IPHONE!");
+        if([[UIDevice currentDevice].model hasPrefix:@"iPad"]){
+            //IPAD
+            CCLOG(@"Dette er en IPAD!");
+            winY=s.height*0.76;
+            //winX=200;
+            brickSize=72;
+            winXoffset=-25;
+            [self addChild:background4 z:-2];
+
+            
+        } else {
+            CCLOG(@"Dette er en IPHONE/IPOD!");
             //winY=390;
             winY=s.height*0.81;
             winX=200;
@@ -36,14 +46,7 @@
             //background5.position = ccp(s.width/2,s.height/1.8);
             [self addChild:background4 z:-2];
             [self addChild:background5 z:-1];
-        } else {
-            //IPAD
-            CCLOG(@"Dette er en IPAD!");
-            winY=s.height*0.76;
-            //winX=200;
-            brickSize=72;
-            winXoffset=-25;
-            [self addChild:background4 z:-2];
+
             
         }
         CCLOG(@"winY:%i",winY);

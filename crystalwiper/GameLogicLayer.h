@@ -2,8 +2,8 @@
 //  GameLogicLayer.h
 
 #import "AdViewController.h"
-
-#import "Brick.h"
+#import "AStarPathFinder.h"
+#import "Brick.h"   
 
 
 @interface GameLogicLayer : CCLayer {

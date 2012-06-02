@@ -45,6 +45,7 @@
     if (self != nil) {
 		if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] != nil) { 
             playAudio = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlayAudio"] intValue];
+            CCLOG(@"MUSIC IS: %i",playAudio);
         }
         else {
             playAudio=YES;  
@@ -53,9 +54,10 @@
         
         if([[NSUserDefaults standardUserDefaults] objectForKey:@"kPlaySoundFX"] != nil) { 
             playSoundFX = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kPlaySoundFX"] intValue];
+            CCLOG(@"SOUNDFX IS: %i",playSoundFX);
         }
         else {
-            playAudio=YES;  
+            playSoundFX=YES;  
         }
         
         
@@ -109,10 +111,10 @@
 }
 
 -(BOOL) isIpad{
-    if([[UIDevice currentDevice].model hasPrefix:@"iPhone"])
-        return NO;
-    else
+    if([[UIDevice currentDevice].model hasPrefix:@"iPad"])
         return YES;
+    else
+        return NO;
 }
 
 - (void) initMenu{
@@ -169,11 +171,11 @@
     scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
     scoreLabel.position =  ccp( scoreXpos*menuXmultiplier, menuPosition );
     scoreLabel.color=ccc3(0,0,0); 
-    [self addChild:scoreLabel z:530];
+    [self addChild:scoreLabel z:30];
     scoreLabel = [CCLabelTTF labelWithString:scorel fontName:fontname fontSize:22];
     scoreLabel.position =  ccp( (scoreXpos*menuXmultiplier)+1, menuPosition+1 );
     scoreLabel.color=ccc3(255,255,255); 
-    [self addChild:scoreLabel z:531];
+    [self addChild:scoreLabel z:31];
     
     scoreValueShadow = [CCLabelTTF labelWithString:@"  0" fontName:fontname fontSize:22];
     scoreValueShadow.position =  ccp( scorevalueXpos*menuXmultiplier, menuPosition );
@@ -476,16 +478,16 @@
     rand2=rand1+1;
     CGSize s = [[CCDirector sharedDirector] winSize];
 
-    if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
-        winY=s.height*0.81;
-        winX=200;
-        brickSize=36;
-        winXoffset=20;
-    } else {
+    if([[UIDevice currentDevice].model hasPrefix:@"iPad"]){
         winY=s.height*0.76;
         //winX=200;
         brickSize=72;
         winXoffset=-25;
+    } else {
+        winY=s.height*0.81;
+        winX=200;
+        brickSize=36;
+        winXoffset=20;
     }
 
     
@@ -589,6 +591,7 @@
     
 }
 - (void) tryCreateSomeBricks {
+    [self moveBricksDown];
     BOOL createBricks=NO;
     for(int x=1;x<=kLastColumn;x++){
         if(nil==board[x][0]){
@@ -1133,16 +1136,27 @@
 - (void) isGameOver{
     tempGrouping = [[NSMutableArray alloc] init];
     BOOL keepchecking,brickfound,foundThree;
-    int x,y,m;
+    int x,y,m,bricktype;
+    
     foundThree=NO;
+    //DEBUg
+    /*
+     for (int l=0;l<[sprites count];l++){
+        Brick *brick3 = (Brick *)[self getChildByTag:l];
+        brick3.opacity=255;
+    }
+    */
+    
     for (int l=0;l<[sprites count];l++){
         
         
         if(!foundThree){
             Brick *brick3 = (Brick *)[self getChildByTag:l];
+            
             x=brick3.boardX;
             y=brick3.boardY;
             m=0;
+            
             if(nil!=brick3){
                 [tempGrouping addObject:brick3];
                 Brick *nbrick;                
@@ -1151,7 +1165,8 @@
                 while(keepchecking){
                     
                     brickfound=NO;
-                    for (int l=0;l<[tempGrouping count];l++){
+                    /*
+                     for (int l=0;l<[tempGrouping count];l++){
                         //CCLOG(@"loopround %i ",l);
                         Brick *brick = [tempGrouping objectAtIndex:l];
                         //CCLOG(@"bricktype %i",brick.brickType);
@@ -1207,6 +1222,66 @@
                         
                         
                     }
+                    */
+                    for (int l=0;l<[tempGrouping count];l++){
+                        //CCLOG(@"loopround %i ",l);
+                        Brick *brick = [tempGrouping objectAtIndex:l];
+                        //CCLOG(@"bricktype %i",brick.brickType);
+                        if(brick.boardY>0 && brick.boardY <=kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY-1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    bricktype=brick3.brickType;
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{    
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }
+                            } }
+                        
+                        if(brick.boardY>=0 && brick.boardY <kLastRow){ 
+                            nbrick=board[brick.boardX][brick.boardY+1];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    bricktype=brick3.brickType;
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }    
+                            } }                     
+                        
+                        if(brick.boardX>0 && brick.boardX <=kLastColumn){ 
+                            nbrick=board[brick.boardX-1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){ 
+                                    bricktype=brick3.brickType;
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }
+                            } }
+                        
+                        if(brick.boardX>0 && brick.boardX <kLastColumn){ 
+                            nbrick=board[brick.boardX+1][brick.boardY];
+                            if(nil!=nbrick){ 
+                                if(nbrick.brickType==brick3.brickType){
+                                    bricktype=brick3.brickType;
+                                    if ([tempGrouping containsObject:nbrick]){
+                                    }else{
+                                        [tempGrouping addObject:nbrick];
+                                        brickfound=YES;     
+                                    }
+                                }
+                            } }
+                        
+                        
+                    }
+
                     
                     if(brickfound) keepchecking=YES; else keepchecking=NO;
                 }
@@ -1217,21 +1292,30 @@
             foundThree=YES;
             
         }
-        /*
-        for (int kk=0;kk<[tempGrouping count];kk++){
-            Brick *brick = [tempGrouping objectAtIndex:kk];
-            brick.disappearing=YES;
-        }
-        */
         
         
         //DEBUG
         /*
          for (int kk=0;kk<[tempGrouping count];kk++){
             Brick *brick = [tempGrouping objectAtIndex:kk];
+            brick.disappearing=YES;
+        }
+        */
+        
+        
+        //FJERN DUPLIKATER
+        for (int kk=0;kk<[tempGrouping count];kk++){
+            Brick *brick = [tempGrouping objectAtIndex:kk];
+            if(brick.brickType!= bricktype) [tempGrouping removeObjectAtIndex:kk];
+        }
+        
+        /*
+         for (int kk=0;kk<[tempGrouping count];kk++){
+            Brick *brick = [tempGrouping objectAtIndex:kk];
             brick.opacity=90;
         }
         */
+         
         
         //CCLOG(@"FOund %i!",[tempGrouping count]);
         [tempGrouping removeAllObjects];
@@ -1263,7 +1347,7 @@
     BOOL keepchecking;
     BOOL brickfound;
     brickfound=NO;
-    int x,y,m;
+    int x,y,m,bricktype;
     /*
      if((int)point.y>0 && (int)point.y<=80
      && (int)point.x>120 && (int)point.x <= 240){
@@ -1301,6 +1385,7 @@
                             nbrick=board[brick.boardX][brick.boardY-1];
                             if(nil!=nbrick){ 
                                 if(nbrick.brickType==brick.brickType){ 
+                                    bricktype=brick.brickType;
                                     if ([tempGrouping containsObject:nbrick]){
                                     }else{    
                                         [tempGrouping addObject:nbrick];
@@ -1313,6 +1398,7 @@
                             nbrick=board[brick.boardX][brick.boardY+1];
                             if(nil!=nbrick){ 
                                 if(nbrick.brickType==brick.brickType){ 
+                                    bricktype=brick.brickType;
                                     if ([tempGrouping containsObject:nbrick]){
                                     }else{
                                         [tempGrouping addObject:nbrick];
@@ -1325,6 +1411,7 @@
                             nbrick=board[brick.boardX-1][brick.boardY];
                             if(nil!=nbrick){ 
                                 if(nbrick.brickType==brick.brickType){ 
+                                    bricktype=brick.brickType;
                                     if ([tempGrouping containsObject:nbrick]){
                                     }else{
                                         [tempGrouping addObject:nbrick];
@@ -1337,6 +1424,7 @@
                             nbrick=board[brick.boardX+1][brick.boardY];
                             if(nil!=nbrick){ 
                                 if(nbrick.brickType==brick.brickType){
+                                    bricktype=brick.brickType;
                                     if ([tempGrouping containsObject:nbrick]){
                                     }else{
                                         [tempGrouping addObject:nbrick];
@@ -1354,7 +1442,11 @@
             }  
         } 
     }
-    
+    for (int kk=0;kk<[tempGrouping count];kk++){
+        Brick *brick = [tempGrouping objectAtIndex:kk];
+        // CCLOG(@"brick vs type %i %i",brick.brickType, bricktype);
+        if(brick.brickType!= bricktype) [tempGrouping removeObjectAtIndex:kk];
+    }
     
     if([tempGrouping count] > 2){
         for (int l=0;l<[tempGrouping count];l++){

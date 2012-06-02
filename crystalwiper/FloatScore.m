@@ -19,13 +19,13 @@
     CGSize s = [[CCDirector sharedDirector] winSize]; 
     int menuOffset=20,menuPosition=s.height-(menuOffset-1);
     int menuXmultiplier=1,fontsize=14,scorevalueXpos=275;
-if([[UIDevice currentDevice].model hasPrefix:@"iPhone"]){
+if([[UIDevice currentDevice].model hasPrefix:@"iPad"]){
         
+    menuPosition=s.height-(menuOffset-1);
+    menuXmultiplier=2; 
+    fontsize=20;
+    scorevalueXpos=340;
     } else {
-        menuPosition=s.height-(menuOffset-1);
-        menuXmultiplier=2; 
-        fontsize=20;
-        scorevalueXpos=340;
     }
     
     
