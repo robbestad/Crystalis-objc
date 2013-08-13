@@ -3,7 +3,7 @@
 @class CCMenu;
 
 
-@interface MainMenu : CCLayer
+@interface MainMenu : CCLayer <UIApplicationDelegate, CCDirectorDelegate>
 {
 	CCMenuItem	*disabledItem;
     BOOL audioInit;

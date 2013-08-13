@@ -59,13 +59,17 @@
         else {
             playSoundFX=YES;  
         }
-        
-        
+        [[GameCenter sharedInstance] authenticateLocalUser];
+
+        [self lagreHighscore];
         [self startGame];		
-        
+         
     }
+    
     return self;
 }
+
+
 
 /// GAME CENTER ////
 - (void) retrieveHighScore {
@@ -80,16 +84,36 @@
             }
             if (scores != nil){
                 // process the score information.
-                CCLOG(@"************** HIGHScore: %d", ((GKScore*)[scores objectAtIndex:0]).value);
+                CCLOG(@"************** HIGHScore: %lld", ((GKScore*)[scores objectAtIndex:0]).value);
             } 
         }];
     }
 }
+
+
+
 - (void) reportScore: (int64_t) reportScore forCategory: (NSString*) category
 {
     GKScore *scoreReporter = [[GKScore alloc] initWithCategory:category];
-    scoreReporter.value = (int64_t)reportScore;
-    CCLOG(@"reporting scofre %i",(int64_t)reportScore);
+    scoreReporter.value = reportScore;
+    
+    [scoreReporter reportScoreWithCompletionHandler:^(NSError *error) {
+        if (error != nil)
+        {
+            CCLOG(@"'*!*!*!**!*!*!*!* reportScore: %lld' error: %@!",reportScore,error);
+        }
+        else 
+        {
+            NSLog(@"'*************** reportScore: %lld' successful!",reportScore);
+        }
+    }];
+}
+/*
+- (void) reportScore: (int64_t) reportScore forCategory: (NSString*) category
+{
+    GKScore *scoreReporter = [[GKScore alloc] initWithCategory:category];
+    scoreReporter.value = reportScore;
+    CCLOG(@"reporting scofre %i",reportScore);
     
     
     
@@ -104,6 +128,7 @@
         }
     }];
 }
+ */
 
 - (void) dealloc {
     [self clearBoard];
@@ -124,12 +149,12 @@
     if([self isIpad]){
        menuXmultiplier=2; 
         scoreXpos=295;
-        multiplierX=190;
+        multiplierX=100;
         scorevalueXpos=345;
         fontsize=18;
         bobleX=190;
-        showFaceAndBubble=NO;
-        text1Xpos=415;
+        showFaceAndBubble=YES;
+        text1Xpos=215;
         text1YPos=100;
         multiplierFont=20;
     }
@@ -199,7 +224,7 @@
     Multiplier.position = ccp(text1Xpos,text1YPos);
     Multiplier.color=ccc3(0,0,0); 
     [self addChild:Multiplier z:30];
-    
+    //showFaceAndBubble=YES;
     if(showFaceAndBubble){
         
     // BACKGROUND
@@ -214,6 +239,7 @@
     boble.opacity=180;
     [self addChild:boble z:0];
     }
+    
     
     // clear the board
 	memset(board, 0, sizeof(board));
@@ -235,7 +261,7 @@
     difficultyLevel=1;
     levelWon=NO;
     gameIsOver=NO;
-    CCLOG(@"gamemode %i",GameMode);
+    //CCLOG(@"gamemode %i",GameMode);
     
     switch(GameMode){
         case 0:
@@ -272,12 +298,12 @@
         case 5:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=75;
+            reqCrystals=45;
             break;
         case 6:
             // Level 5
             difficultyLevel=3;
-            reqCrystals=50;
+            reqCrystals=35;
             break;
         case 7:
             // Level 5
@@ -307,7 +333,7 @@
     }
     levelWon=NO;
     if(GameMode>8)GameMode=8;
-    CCLOG(@"gamemode %i",GameMode);
+    //CCLOG(@"gamemode %i",GameMode);
     //CCLOG(@"allCrystals %i reqCrystals %i redCrystals %i",allCrystals,reqCrystals,redCrystals);
     NSString *txtGamemode;
     NSString *txtTmp;
@@ -425,15 +451,20 @@
         [self leverOver];
     }
  
-    NSString *nytempStr = 
+    NSString *fontname=@"American Typewriter";
+    int multiplierFont=12;
+    if([self isIpad]) multiplierFont=20;
+    NSString *nytempStr =
     [[NSString alloc] initWithFormat:@"%@: %@",goal,txtGamemode];
-    
-    bobletext.position=ccp(text1Xpos,text1YPos);
-    bobletext.fontSize=fontsize;
+    if([self isIpad]) { text1Xpos=338;text1YPos-=15;}
+    //bobletext = [CCLabelTTF labelWithString:@"" fontName:fontname fontSize:multiplierFont];
+    bobletext.position = ccp(text1Xpos,text1YPos);
+    bobletext.color=ccc3(0,0,0);
+    [bobletext setFontName:fontname];
     [bobletext setString:nytempStr];
     [bobletext draw];
     
-    
+
     
 }
 
@@ -548,7 +579,7 @@
                 board[x][y] = brick1;
                 brick1.boardX = x; brick1.boardY = y;
                 brick1.position = COMPUTE_X_Y(x,y,winY,winXoffset,brickSize);
-                CCLOG(@"brickposition %i",brick1.position);
+                //CCLOG(@"brickposition %i",brick1.position);
                 //CCLOG(@"tag %i",tagtab);
                 brick1.tag=tagtab;
                 [self addChild:brick1 z:2];
@@ -960,6 +991,8 @@
         playersHighscore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kHighscore"] intValue];
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSLog(@"ACTUAL SCORE: %i",score);
+    NSLog(@"PLAYER sHIGHSCORE: %i",playersHighscore);
     
     if(score>playersHighscore){
         //Lagre ny highscore
@@ -967,10 +1000,12 @@
         int64_t highscore;
         highscore=(int64_t)playersHighscore;
         //Send til gamecenter
-        [self reportScore:highscore forCategory:@"wiper"];
     }
     int64_t highscore;
     highscore=(int64_t)playersHighscore;
+    highscore=(int64_t)1000;
+    
+    [self reportScore:(int64_t)playersHighscore forCategory:@"wiperchamps"];
     
     int kAllCrystals=0;
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kAllCrystals"] != nil) { 
@@ -981,10 +1016,10 @@
     int kRedCrystals=0;
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] != nil) { 
         kRedCrystals = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kRedCrystals"] intValue];
-        CCLOG(@" red er %i",kRedCrystals);
+        //CCLOG(@" red er %i",kRedCrystals);
     }
     [defaults setInteger:kRedCrystals+redCrystals forKey:@"kRedCrystals"];
-     CCLOG(@"setter red %i",kRedCrystals+redCrystals);
+     //CCLOG(@"setter red %i",kRedCrystals+redCrystals);
     
     int kGreenCrystals=0;
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"kGreenCrystals"] != nil) { 
@@ -1022,7 +1057,7 @@
     
     [defaults synchronize];
     
-    [self reportScore:highscore forCategory:@"wiper"];
+    [self reportScore:highscore forCategory:@"wiperchamps"];
     
 }
 
@@ -1113,7 +1148,8 @@
 - (void) updateBoard:(ccTime)dt {
 	frameCount++;
 	[self moveBricksDown];
-    
+    // [self isGameOver];
+
     if(!gameIsOver){
         [self removeBricks];
         
@@ -1295,13 +1331,12 @@
         
         
         //DEBUG
-        /*
-         for (int kk=0;kk<[tempGrouping count];kk++){
+       /*
+        for (int kk=0;kk<[tempGrouping count];kk++){
             Brick *brick = [tempGrouping objectAtIndex:kk];
             brick.disappearing=YES;
         }
         */
-        
         
         //FJERN DUPLIKATER
         for (int kk=0;kk<[tempGrouping count];kk++){
@@ -1365,7 +1400,7 @@
         Brick *brick3 = (Brick *)[self getChildByTag:l];
         
         if (CGRectContainsPoint([brick3 boundingBox], point)){
-            CCLOG(@"touched brick type: %i %i - disapp: %i",brick3.boardX,brick3.boardY,brick3.disappearing);
+            //CCLOG(@"touched brick type: %i %i - disapp: %i",brick3.boardX,brick3.boardY,brick3.disappearing);
             x=brick3.boardX;
             y=brick3.boardY;
             m=0;
@@ -1452,6 +1487,16 @@
         for (int l=0;l<[tempGrouping count];l++){
             Brick *brick = [tempGrouping objectAtIndex:l];
             brick.disappearing=YES;
+           
+            //DEBUG
+            /*
+             brick.opacity=100;
+            
+            if ([touch tapCount] == 2) {
+                brick.disappearing=YES;
+            }
+             */
+            
         }
     }
     
@@ -1491,7 +1536,7 @@
 			// Is this block disappearing?
 			if (nil != brick1 && brick1.disappearing) {
 				allCrystals++;
-                CCLOG(@"brick %d",brick1);
+                //CCLOG(@"brick %d",brick1);
                 switch(brick1.brickType){
                     case 0: redCrystals++; break;
                     case 1: yellowCrystals++; break;
@@ -1534,7 +1579,7 @@
                 board[x][y] = nil;
                 [ParticleFunctions createExplosionX:remx y:remy inParent:self];
                 j++;
-                 CCLOG(@"red:%i yel:%i green:%i lilla:%i blue:%i ice:%i",redCrystals,yellowCrystals,greenCrystals,purpleCrystals,blueCrystals,iceCrystals);
+                 //CCLOG(@"red:%i yel:%i green:%i lilla:%i blue:%i ice:%i",redCrystals,yellowCrystals,greenCrystals,purpleCrystals,blueCrystals,iceCrystals);
 			}
             
 		}

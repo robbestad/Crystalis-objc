@@ -13,10 +13,18 @@ int winX,winY,brickSize,winXoffset;
     AppDelegate *delegate;
     
     BOOL isGameScene;
-        
+    CCSprite* clouds;
+    CCSprite* clouds2;
+    CCParallaxNode *_backgroundNode;
+    CCSprite *_spacedust1;
+    CCSprite *_spacedust2;
+    CCSprite *_planetsunrise;
+    CCSprite *_galaxy;
+    CCSprite *_spacialanomaly;
+    CCSprite *_spacialanomaly2;
+
     
 }
-
 
 
 @end

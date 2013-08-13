@@ -7,7 +7,8 @@
 #import "SimpleAudioEngine.h"
 #import "MainMenu.h"
 #import "GameScene.h"
-//#import "GameKit/GameKit.h"
+#import "GameKit/GameKit.h"
+#import "GameCenter.h"
 
 
 
@@ -20,8 +21,22 @@ enum {
 
 #pragma mark - MainMenu
 
-@implementation MainMenu
-
+@implementation MainMenu 
+/*
+- (void) showLeaderboard
+{
+    GKLeaderboardViewController *leaderboardController = [[GKLeaderboardViewController alloc] init];
+    if (leaderboardController != nil)
+    {
+        leaderboardController.leaderboardDelegate = self;
+        [self presentModalViewController: leaderboardController animated: YES];
+    }
+}
+- (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+*/
 -(id) init
 {
 	if( (self=[super init])) {

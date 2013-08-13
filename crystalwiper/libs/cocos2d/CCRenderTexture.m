@@ -289,21 +289,23 @@
 #if __CC_PLATFORM_IOS
 	
 	UIImage* image	= [[UIImage alloc] initWithCGImage:imageRef scale:CC_CONTENT_SCALE_FACTOR() orientation:UIImageOrientationUp];
-	NSData *imageData;
 
-	if( format == kCCImageFormatPNG )
+	if( format == kCCImageFormatPNG ){
+        NSData *imageData;
 		imageData = UIImagePNGRepresentation( image );
 
-	else if( format == kCCImageFormatJPEG )
+        [image release];
+        
+        success = [imageData writeToFile:fullPath atomically:YES];
+    }
+	else {
+        NSData *imageData;
 		imageData = UIImageJPEGRepresentation(image, 0.9f);
-
-	else
-		NSAssert(NO, @"Unsupported format");
+        [image release];
+        
+        success = [imageData writeToFile:fullPath atomically:YES];
+    }
 	
-	[image release];
-
-	success = [imageData writeToFile:fullPath atomically:YES];
-
 	
 #elif __CC_PLATFORM_MAC
 	

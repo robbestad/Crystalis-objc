@@ -72,6 +72,7 @@ static GameCenter *sharedHelper = nil;
 - (void)authenticateLocalUser { 
     
     if (!gameCenterAvailable) return;
+  
     
     NSLog(@"Authenticating local user...");
     if ([GKLocalPlayer localPlayer].authenticated == NO) {     
@@ -86,13 +87,20 @@ static GameCenter *sharedHelper = nil;
         
        
     }
+[self retrieveTopTenScores];
 }
+
+
 
 - (void) retrieveTopTenScores
 {
     GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init];
+    NSLog(@"topten start");
+    
     if (leaderboardRequest != nil)
     {
+        NSLog(@"topten NOT NIL!");
+        
         leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal;
         leaderboardRequest.timeScope = GKLeaderboardTimeScopeAllTime;
         leaderboardRequest.range = NSMakeRange(1,10);
@@ -100,10 +108,18 @@ static GameCenter *sharedHelper = nil;
             if (error != nil)
             {
                 // handle the error.
+                NSLog(@"topten error: %@",error);
             }
             if (scores != nil)
             {
                 // process the score information.
+                NSLog(@"TOPTEN SCORESCOUNT: %i",scores.count);
+                for(int i=0;i<scores.count;i++){
+                    NSArray *scorA= [scores objectAtIndex:i];
+                    NSLog(@"TOPTEN scorearr: %@",scorA);
+                    
+                }
+                
             }
         }];
     }

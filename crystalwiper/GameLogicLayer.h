@@ -49,7 +49,7 @@
     NSMutableArray *loopGrouping;
     NSMutableSet *grouping;
     
-       
+         
 }
 
 - (void) isGameOver;

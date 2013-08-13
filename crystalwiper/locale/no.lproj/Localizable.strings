@@ -1,0 +1,71 @@
+/* 
+  Localizable.strings
+  Coloris
+
+  Created by Sven Anders Robbestad on 28.04.12.
+  Copyright (c) 2012 SOL. All rights reserved.
+*/
+//Localizable.strings file for the norwegian version.
+"WelcomeKey" = "Velkommen!!!";
+"Settings" = "Innstillinger";
+"GameName" = "WIPER";
+"On" = "Skru AV";
+"Off" = "Skru PÅ";
+"Back" = "Tilbake";
+"Quality" = "Kvalitet";
+"Music" = "Musikk";
+"Sound"= "Lyd";
+"High" = "Høy";
+"Low" = "Lav";
+"Setnewhighscore"="Sett ny highscore!";
+
+"txtContinue" = "Fortsett";
+"txtUCContinue" = "FORTSETT";
+"txtMultiplier" ="Poengmultiplikator:";
+"txtPause" = "Pause";
+"Orientation" = "Orientering";
+"MainMenu" = "Meny";
+"Menu"="MENY";
+"Main"="MENY";
+
+"Drop" = "Ned";
+"beatultimatehighscore"="Crystalis Champion";
+"Venstre" = "<<<";
+"Hoyre" = ">>>";
+"Restart"="OMSTART";
+"Shake" = "RIST!";
+"krystaller" = "krystaller";
+"igjen" = "igjen";
+"beatyourscore"="Slå din highscore";
+"poeng"="poeng";
+"goal"="Mål";
+"Play" = "Spill";
+"Score" = "Score:";
+"red"="røde";
+"yellow"="gule";
+"blue"="blå";
+"ice"="is";
+"purple"="lilla";
+"green"="grønne";
+"txtgameover"="Uffda, ingen flere gyldige trekk. Prøv igjen!";
+"txtleveldone1"="Godt jobbet! Du klarte denne utfordringen med glans!";
+"nextLevel"="NESTE";
+"Returntomain"="Tilbake til hovedmeny";
+"Level"="Nivå";
+"RedCrystals"="Røde Krystaller";
+"AllCrystals"="Alle Krystaller";
+"BlueCrystals"="Blå Krystaller";
+"GreenCrystals"="Grønne Krystaller";
+"IceCrystals"="Iskrystaller";
+"PurpleCrystals"="Lilla krystaller";
+"YellowCrystals"="Gule Krystaller";
+
+
+"Howtoplay" = "Instruksjoner";
+"Instructions1" = "Rensk bordet, om du klarer!";
+"Instructions2" = "Merk av tre eller flere.";
+"Instructions3" = "Jo flere brikker, dess mere poeng";
+"Aboutgame" = "Om spillet";
+"About1" = "Crystalis er et spill der du skal forsøke å renske spillområdet for krystaller ved å peke på kombinasjoner med flere enn tre krystaller. Dess flere krystaller du klarer å kombinere, dess høyere blir din poengsum. Spillet er laget og publisert av Svenardo og er dedisert Ida Alana og Henry Alexander";
+"utfordringer" = "Utfordringer";
+"Marathon" = "Maraton";

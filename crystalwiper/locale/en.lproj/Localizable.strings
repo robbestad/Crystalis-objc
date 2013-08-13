@@ -1,0 +1,69 @@
+/* 
+  Localizable.strings
+  WIPER
+
+  Created by Sven Anders Robbestad on 28.04.12.
+  Copyright (c) 2012 SOL. All rights reserved.
+*/
+//Localizable.String file for the English version.
+"WelcomeKey" = "Welcome!!!";
+"Drop" = "Drop";
+"GameName" = "WIPER";
+"Settings" = "Settings";
+"On" = "Turn OFF";
+"Off" = "Turn ON";
+
+"Quality" = "Quality";
+"Music" = "Music";
+"Sound"= "Sound";
+"High" = "High";
+"Low" = "Low";
+"txtUCContinue" = "FORTSETT";
+"txtPause" = "Pause";
+"Orientation" = "Orientation";
+"MainMenu" = "Hovedmeny";
+"Back"="Back";
+"krystaller" = "crystals";
+"igjen" = "left";
+"txtContinue"="Continue";
+"goal"="Goal";
+"beatyourscore"="Beat your score";
+"poeng"="points";
+"Venstre" = "<<<";
+"Hoyre" = ">>>";
+"Shake" = "Shake!";
+"Play" = "Play";
+"Score" = "SCORE:";
+"red"="red";
+"yellow"="yellow";
+"blue"="blue";
+"ice"="ice";
+"purple"="purple";
+"green"="green";
+"RedCrystals"="Red Crystals";
+"AllCrystals"="All Crystals";
+"BlueCrystals"="Blue Crystals";
+"GreenCrystals"="Green Crystals";
+"IceCrystals"="Ice Crystals";
+"YellowCrystals"="Yellow Crystals";
+"PurpleCrystals"="Purple Crystals";
+"txtgameover"="Oops, you're out of moves. Try again! ";
+"txtleveldone1"="Well done, challenge completed!";
+"nextLevel"="NEXT";
+"Menu"="MENU";
+"Setnewhighscore"="Set a new High Score!";
+
+"Returntomain"="Return to Main Menu";
+"Level"="Level";
+"Main"="MAIN";
+"beatultimatehighscore"="Crystalis master";
+"txtMultiplier" ="Point multiplier: ";
+"Restart"="RESTART";
+"Howtoplay" = "How to play";
+"Instructions1" = "Match three or more bricks";
+"Instructions2" = "and clear as many you can.";
+"Instructions3" = "More bricks score higher";
+"Aboutgame" = "About";
+"About1" = "Become the ultimate Crystalis champion! Find and click on any combinations of three or more crystals. The more crystals you are able to remove in one go, the higher you score. Additionally, a score multiplier is applied as you the difficulty increases. ";
+"utfordringer" = "Challenges";
+"Marathon" = "Marathon";
