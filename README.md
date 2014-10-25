@@ -7,6 +7,12 @@ This was my first Cocos2D project, and it probably shows.
 I'm sharing this in case anyone wants to check out 
 a iOS5/6-era project. 
 
+# Graphics license
+
+The code is ISC licensed. The graphics are not, so if you
+want to build a new version, please replace all graphic 
+assets with your own.
+
 # Old man memoirs
 
 The first version of this game didn't have ARC (it didn't
