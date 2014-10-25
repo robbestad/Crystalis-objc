@@ -293,7 +293,7 @@
 {
 	rectRotated_ = rotated;
 
-	[self setContentSize:untrimmedSize];
+    [self setContentSize:untrimmedSize];
 	[self setVertexRect:rect];
 	[self setTextureCoords:rect];
 
@@ -865,10 +865,11 @@
 -(void) setDisplayFrame:(CCSpriteFrame*)frame
 {
 	unflippedOffsetPositionFromCenter_ = frame.offset;
-
+    
 	CCTexture2D *newTexture = [frame texture];
 	// update texture before updating texture rect
-	if ( newTexture.name != texture_.name )
+ 
+ if ( newTexture.name != texture_.name )
 		[self setTexture: newTexture];
 
 	// update rect

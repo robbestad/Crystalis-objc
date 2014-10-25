@@ -385,7 +385,8 @@ typedef void (*GLLogFunction) (GLuint program,
 	
 	// Purge uniform hash
 	HASH_ITER(hh, hashForUniforms_, current_element, tmp) {
-		HASH_DEL(hashForUniforms_, current_element);
+        // @TODO decomment this if error
+        //	HASH_DEL(hashForUniforms_, current_element);
 		free(current_element->value);
 		free(current_element);
 	}

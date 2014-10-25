@@ -153,7 +153,7 @@ typedef struct _FontDefHashElement
 	tFontDefHashElement *current, *tmp;
 	
 	HASH_ITER(hh, fontDefDictionary_, current, tmp) {
-		HASH_DEL(fontDefDictionary_, current);
+        HASH_DEL(fontDefDictionary_, current);
 		free(current);
 	}
 }
@@ -164,7 +164,7 @@ typedef struct _FontDefHashElement
 
 	while(kerningDictionary_) {
 		current = kerningDictionary_;
-		HASH_DEL(kerningDictionary_,current);
+        HASH_DEL(kerningDictionary_,current);
 		free(current);
 	}
 }
